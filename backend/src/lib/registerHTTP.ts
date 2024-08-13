@@ -8,7 +8,8 @@ export function registerHTTP(
   router: Router,
   callback: (req: Request, res: Response) => void
 ) {
-  console.log(`++ (${method.toUpperCase()}) ${endpoint}`);
+  Logger.logGreenUnderline(`++ (${method.toUpperCase()}) ${endpoint}`);
+  // same as router.get(), etc, just called dynamically and saves using switch/if else
   (router as any)[method](endpoint, (req: Request, res: Response) => {
     callback(req, res);
   });

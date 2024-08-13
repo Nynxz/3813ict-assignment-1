@@ -3,12 +3,14 @@ import { CONFIG } from "./config";
 import express from "express";
 import { readdirSync } from "fs";
 import cors from "cors";
+import { Logger } from "./lib/logger";
 
 export class Gateway {
   app;
   router;
 
   constructor() {
+    Logger.logOrangeUnderline("----Gateway----");
     this.app = express();
     this.router = express.Router();
     this.app.use(express.urlencoded({ extended: true }));
@@ -17,6 +19,7 @@ export class Gateway {
   }
 
   async loadRoutes() {
+    Logger.logOrange("Loading Routes:");
     await this._loadRoutesFolder();
     this.app.use(this.router);
   }
@@ -24,7 +27,7 @@ export class Gateway {
   async start() {
     await this.loadRoutes();
     this.app.listen(CONFIG.PORT, () => {
-      console.log(`Gateway listening on port ${CONFIG.PORT}`);
+      Logger.logOrange(`Listening on port ${CONFIG.PORT}`);
     });
   }
 
