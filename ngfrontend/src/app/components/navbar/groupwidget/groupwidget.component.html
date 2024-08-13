@@ -1,0 +1,12 @@
+<div class="relative flex flex-row rounded-md border-black border-[1px] my-2">
+  <span class="absolute right-[-6px] top-[-6px] flex h-3 w-3">
+    <span
+      class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-500 opacity-75"
+    ></span>
+    <span
+      class="relative inline-flex rounded-full h-3 w-3 bg-indigo-300"
+    ></span>
+  </span>
+  <img class="rounded-md" src="{{ image }}" />
+  <p *ngIf="!folded" class="leading-4">{{ serverName }}</p>
+</div>

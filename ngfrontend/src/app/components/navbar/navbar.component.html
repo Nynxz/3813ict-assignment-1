@@ -1,0 +1,51 @@
+<div
+  *ngIf="!folded"
+  class="bg-slate-600 rounded-md border-black border-[1px] flex h-full w-44 p-2 flex-col justify-between"
+  style=""
+>
+  <ul>
+    <div class="flex flex-row rounded-md border-black border-[1px]">
+      <img src="house-svgrepo-com.svg" alt="svg arrow" class="h-8" />
+      <div
+        class="w-full bg-slate-600 rounded-r-md border-l-[1px] border-black text-center"
+      >
+        <a class="underline font-bold text-2xl">Home</a>
+      </div>
+    </div>
+    <li><app-groupwidget [folded]="folded" serverName="First Server" /></li>
+    <li><app-groupwidget [folded]="folded" serverName="second Server" /></li>
+    <li><app-groupwidget [folded]="folded" serverName="Third Server" /></li>
+  </ul>
+  <div class="">
+    <button (click)="fold()" class="">
+      <img
+        src="arrow-narrow-right-move-svgrepo-com.svg"
+        alt="svg arrow"
+        class="rotate-180 h-8"
+      />
+    </button>
+  </div>
+</div>
+
+<div
+  *ngIf="folded"
+  class="bg-slate-600 rounded-md border-black border-[1px] flex h-full w-[52px] p-2 flex-col justify-between"
+>
+  <ul>
+    <div class="flex flex-row rounded-md border-black border-[1px]">
+      <img src="house-svgrepo-com.svg" alt="svg arrow" class="h-8" />
+    </div>
+    <li><app-groupwidget [folded]="folded" serverName="First Server" /></li>
+    <li><app-groupwidget [folded]="folded" serverName="second Server" /></li>
+    <li><app-groupwidget [folded]="folded" serverName="Third Server" /></li>
+  </ul>
+  <div>
+    <button (click)="fold()">
+      <img
+        src="arrow-narrow-right-move-svgrepo-com.svg"
+        alt="svg arrow"
+        class="h-8"
+      />
+    </button>
+  </div>
+</div>
