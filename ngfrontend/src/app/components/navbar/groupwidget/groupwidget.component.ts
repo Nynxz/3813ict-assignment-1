@@ -9,6 +9,6 @@ import { Component, Input } from '@angular/core';
 })
 export class GroupwidgetComponent {
   @Input() serverName = 'server';
-  @Input() folded = false;
+  @Input() folded: boolean | null = null;
   image = 'https://placehold.co/32x32';
 }
