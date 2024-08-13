@@ -7,11 +7,11 @@ import { HelloworldService } from './test/helloworld.service';
   standalone: true,
   imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
-  title = 'ngfrontend';
-  message: string = '';
+  title = 'Home';
+  message: string = 'Message Loading..';
   constructor(private helloWorldService: HelloworldService) {}
 
   ngOnInit(): void {
