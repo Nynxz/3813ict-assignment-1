@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { registerHTTP } from "../lib/registerHTTP";
-import { resolve } from "path";
 import { Gateway } from "../gateway";
 
 export default (router: Router, gateway: Gateway) => {
