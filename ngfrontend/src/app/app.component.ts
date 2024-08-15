@@ -13,11 +13,16 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 export class AppComponent implements OnInit {
   title = 'Home';
   message: string = 'Message Loading..';
+
+  username = '';
   constructor(private helloWorldService: HelloworldService) {}
 
   ngOnInit(): void {
     this.helloWorldService
       .getHelloWorld()
       .subscribe((message) => (this.message = message));
+    this.helloWorldService.debug.subscribe(
+      (e) => (this.username = e as string)
+    );
   }
 }

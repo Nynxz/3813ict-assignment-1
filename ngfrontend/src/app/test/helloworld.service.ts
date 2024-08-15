@@ -4,14 +4,18 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Text } from '@angular/compiler';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HelloworldService {
-  constructor(private httpClient: HttpClient) {}
+  debug = new Subject();
+
+  constructor(private httpClient: HttpClient) {
+    this.debug.next('DEBUG: NO');
+  }
   /**
    * Sends GET Request to backend '/'
    * @returns {Observable<string>}{Observable<string>}: Response from backend
