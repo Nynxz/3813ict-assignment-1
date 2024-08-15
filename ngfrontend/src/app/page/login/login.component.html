@@ -1,1 +1,38 @@
-<p>login works!</p>
+<div class="bg-red-500 flex flex-grow h-52 min-h-full min-w-full flex-row w-72">
+  <div
+    class="flex flex-grow flex-col rounded-md p-8 h-1/2 border-black border-[1px] border-solid w-max"
+  >
+    <form (ngSubmit)="handleSubmit()">
+      <label for="framework">
+        Email
+        <input
+          type="text"
+          name="email"
+          class="w-full rounded-md border-black border-[1px]"
+          [(ngModel)]="email"
+        />
+      </label>
+      <label for="framework">
+        Password
+        <input
+          type="password"
+          name="password"
+          class="w-full rounded-md border-black border-[1px]"
+          [(ngModel)]="password"
+        />
+      </label>
+      <input
+        type="submit"
+        class="w-full rounded-md border-black border-[1px] mt-3"
+      />
+    </form>
+
+    <p>{{ email }} | {{ password }}</p>
+    <button
+      (click)="logout()"
+      class="border-black border-solid border-[1px] rounded-md hover:bg-black hover:bg-opacity-25 select-none"
+    >
+      Logout
+    </button>
+  </div>
+</div>
