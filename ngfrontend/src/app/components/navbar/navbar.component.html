@@ -1,22 +1,34 @@
 <div
   *ngIf="!folded"
-  class="bg-slate-600 rounded-md border-black border-[1px] flex h-full w-44 p-2 flex-col justify-between"
+  class="bg-slate-600 rounded-r-md border-black border-0 border-r-[1px] flex h-full w-44 p-2 flex-col justify-between"
 >
   <ul>
-    <div class="flex flex-row rounded-md border-black border-[1px]">
+    <a
+      class="flex flex-row rounded-md border-black border-[1px] hover:cursor-pointer hover:bg-black hover:bg-opacity-25"
+      routerLink="/"
+    >
       <img src="house-svgrepo-com.svg" alt="svg arrow" class="h-8" />
       <div
-        class="w-full bg-slate-600 rounded-r-md border-l-[1px] border-black text-center"
+        class="w-full bg-slate-600 rounded-r-md border-l-[1px] border-black text-center font-bold text-2xl"
       >
-        <a class="underline font-bold text-2xl">Home</a>
+        Bicker
       </div>
-    </div>
+    </a>
     <li><app-groupwidget [folded]="folded" serverName="First Server" /></li>
     <li><app-groupwidget [folded]="folded" serverName="second Server" /></li>
     <li><app-groupwidget [folded]="folded" serverName="Third Server" /></li>
   </ul>
-  <div class="">
-    <button (click)="fold()" class="">
+  <div class="flex flex-col">
+    <button
+      class="border-black border-solid border-[1px] rounded-md hover:bg-black hover:bg-opacity-25 select-none"
+      routerLink="/login"
+    >
+      <img src="user-svgrepo-com.svg" alt="svg user" class="h-8" />
+    </button>
+    <button
+      (click)="fold()"
+      class="border-black border-solid border-[1px] rounded-md hover:bg-black hover:bg-opacity-25 select-none"
+    >
       <img
         src="arrow-narrow-right-move-svgrepo-com.svg"
         alt="svg arrow"
@@ -28,22 +40,34 @@
 
 <div
   *ngIf="folded"
-  class="bg-slate-600 rounded-md border-black border-[1px] flex h-full w-[52px] p-2 flex-col justify-between"
+  class="bg-slate-600 rounded-r-md border-black border-0 border-r-[1px] flex h-full w-[51px] p-2 flex-col justify-between"
 >
   <ul>
-    <div class="flex flex-row rounded-md border-black border-[1px]">
+    <a
+      class="flex flex-row rounded-md border-black border-[1px] hover:cursor-pointer hover:bg-black hover:bg-opacity-25"
+      routerLink="/"
+    >
       <img src="house-svgrepo-com.svg" alt="svg arrow" class="h-8" />
-    </div>
+    </a>
     <li><app-groupwidget [folded]="folded" serverName="First Server" /></li>
     <li><app-groupwidget [folded]="folded" serverName="second Server" /></li>
     <li><app-groupwidget [folded]="folded" serverName="Third Server" /></li>
   </ul>
-  <div>
-    <button (click)="fold()">
+  <div class="flex flex-col">
+    <button
+      class="border-black border-solid border-[1px] rounded-md hover:bg-black hover:bg-opacity-25 select-none"
+      routerLink="/login"
+    >
+      <img src="user-svgrepo-com.svg" alt="svg user" class="h-8" />
+    </button>
+    <button
+      (click)="fold()"
+      class="border-black border-solid border-[1px] rounded-md hover:bg-black hover:bg-opacity-25"
+    >
       <img
         src="arrow-narrow-right-move-svgrepo-com.svg"
         alt="svg arrow"
-        class="h-8"
+        class="h-8 select-none"
       />
     </button>
   </div>

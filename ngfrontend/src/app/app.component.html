@@ -2,9 +2,14 @@
   <title>{{ title }}</title>
 </head>
 
-<div class="flex flex-grow h-screen font-sans">
+<div class="flex flex-grow h-screen font-sans bg-gray-500">
   <app-navbar />
-  <div class="flex flex-grow bg-gray-500">
-    {{ message }}
+  <div class="flex flex-grow flex-col bg-gray-500 h-screen">
+    <div
+      class="flex flex-row w-full bg-red-300 border-black border-solid border-2 rounded-md"
+    >
+      Debug: {{ message }}
+    </div>
+    <router-outlet></router-outlet>
   </div>
 </div>

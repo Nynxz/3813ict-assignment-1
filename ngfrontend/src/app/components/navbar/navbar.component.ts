@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { GroupwidgetComponent } from './groupwidget/groupwidget.component';
 import { CommonModule, NgIf } from '@angular/common';
 import { PreferencesService } from '../../storage/preferences.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [GroupwidgetComponent, NgIf],
+  imports: [GroupwidgetComponent, NgIf, RouterLink],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
