@@ -4,6 +4,6 @@ import { Gateway } from "../gateway";
 
 export default (router: Router, gateway: Gateway) => {
   registerHTTP("get", "/", router, (req, res) => {
-    res.send("Hello World!");
+    res.send("Connected to Backend");
   });
 };
