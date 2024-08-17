@@ -4,10 +4,14 @@ import express from "express";
 import { readdirSync } from "fs";
 import cors from "cors";
 import { Logger } from "./lib/logger";
-
+import { MongoClient } from "mongodb";
+import { config } from "dotenv";
+import { findServers } from "./lib/db";
+config();
 export class Gateway {
   app;
   router;
+  db: MongoClient | undefined = undefined;
 
   constructor() {
     Logger.logOrangeUnderline("----Gateway----");
@@ -16,6 +20,20 @@ export class Gateway {
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(express.json());
     this.app.use(cors());
+  }
+
+  async connectToMongoDB() {
+    if (this.db != undefined) return;
+    try {
+      Logger.logGreen("Connecting to MongoDB...");
+      const uri = process.env.MONGODB_URI as string;
+      const mongoDB = new MongoClient(uri);
+      await mongoDB.connect();
+      Logger.logGreen("Connected");
+      this.db = mongoDB;
+    } catch (error) {
+      Logger.logRed("MongoDB Connection Error");
+    }
   }
 
   async loadRoutes() {

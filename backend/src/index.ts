@@ -1,3 +1,6 @@
 import { Gateway } from "./gateway";
-const gateway = new Gateway();
-gateway.start();
+(async () => {
+  const gateway = new Gateway();
+  await gateway.connectToMongoDB();
+  await gateway.start();
+})();
