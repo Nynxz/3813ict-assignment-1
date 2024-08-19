@@ -8,7 +8,9 @@
     <div
       class="flex flex-row w-full bg-red-300 border-black border-solid border-2 rounded-md"
     >
-      Debug: {{ message }} | Username : {{ username }}
+      Debug: {{ message }} | Username : {{ username }} || Logged In :
+      {{ isLoggedIn }}
+      {{ testSignalComputed() }}
     </div>
     <div class="flex flex-grow w-full justify-center">
       <router-outlet></router-outlet>

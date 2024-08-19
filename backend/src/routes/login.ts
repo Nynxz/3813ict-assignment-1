@@ -24,7 +24,18 @@ type User = {
 
 export default (router: Router, gateway: Gateway) => {
   const users: User[] = [
-    { email: "super@super.com", password: "123", username: "super" },
+    {
+      email: "super@super.com",
+      password: "123",
+      username: "super",
+      roles: [Roles.SUPER, Roles.ADMIN],
+    },
+    {
+      email: "normie@normie.com",
+      password: "123",
+      username: "normie",
+      roles: [],
+    },
   ];
 
   registerHTTP("post", "/login", router, (req, res) => {
@@ -34,7 +45,11 @@ export default (router: Router, gateway: Gateway) => {
       (e) => e.email == resBody.email && e.password == resBody.password
     );
     if (user) {
-      res.send(JSON.stringify({ jwt: generateJWT(user.username) }));
+      res.send(
+        JSON.stringify({
+          jwt: generateJWT(user.username, user.roles!),
+        })
+      );
     } else {
       res.status(401);
       res.send("Error!");
@@ -42,6 +57,6 @@ export default (router: Router, gateway: Gateway) => {
   });
 };
 
-const generateJWT = (username: string) => {
-  return sign({ username }, "thisisasecret:):)", { expiresIn: "10h" });
+const generateJWT = (username: string, roles: Roles[]) => {
+  return sign({ username, roles }, "thisisasecret:):)", { expiresIn: "10h" });
 };

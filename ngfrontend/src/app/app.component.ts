@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HelloworldService } from './test/helloworld.service';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { LoginService } from './services/login.service';
+import { UserService } from './services/user.service';
 
 @Component({
   selector: 'app-root',
@@ -13,11 +15,24 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 export class AppComponent implements OnInit {
   title = 'Home';
   message: string = 'Message Loading..';
-
   username = '';
-  constructor(private helloWorldService: HelloworldService) {}
+  isLoggedIn = false;
+
+  testSignalComputed = computed(
+    () => `TEST SIGNAL RESULT: ${this.helloWorldService.testSignal()}`
+  );
+
+  constructor(
+    private helloWorldService: HelloworldService,
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {
+    // this.userService.isLoggedIn.subscribe((e) => {
+    //   console.log('APP COMPONENT: login changing', e);
+    //   this.isLoggedIn = e;
+    // });
+
     this.helloWorldService
       .getHelloWorld()
       .subscribe((message) => (this.message = message));

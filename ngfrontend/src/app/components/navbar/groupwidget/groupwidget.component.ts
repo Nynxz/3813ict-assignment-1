@@ -1,5 +1,6 @@
 import { CommonModule, NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
+
 @Component({
   selector: 'app-groupwidget',
   standalone: true,
@@ -10,5 +11,6 @@ import { Component, Input } from '@angular/core';
 export class GroupwidgetComponent {
   @Input() serverName = 'server';
   @Input() folded: boolean | null = null;
-  image = 'https://placehold.co/32x32';
+  @Input() imageURL: string | undefined = '';
+  image = this.imageURL;
 }

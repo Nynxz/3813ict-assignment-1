@@ -1,38 +1,50 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
 import { PreferencesService } from '../storage/preferences.service';
-import { Subject } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  Observable,
+  startWith,
+  Subject,
+  throwError,
+} from 'rxjs';
+import { HelloworldService } from '../test/helloworld.service';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoginService {
-  details = {
-    username: '',
-  };
-
-  username = new Subject();
-
   constructor(
     private httpClient: HttpClient,
-    private preferencesService: PreferencesService
+    private preferencesService: PreferencesService,
+    private userService: UserService
   ) {}
 
   login(email: string, password: string) {
-    return this.httpClient.post(
-      'http://localhost:3010/login',
-      JSON.stringify({ email, password }),
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    return this.httpClient
+      .post(
+        'http://localhost:3010/login',
+        JSON.stringify({ email, password }),
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          return throwError(
+            () => new Error('Something bad happened; please try again later.')
+          );
+        })
+      );
   }
 
   logout() {
-    this.username.next('');
+    this.userService.setIsLoggedInBoolean(false);
     this.preferencesService.setItem('jwt', '');
   }
 
@@ -46,16 +58,15 @@ export class LoginService {
 
   setDetails(username: string) {
     console.log('Setting Details');
-    this.details.username = username;
-    this.username.next(this.details.username);
-    console.log(this.details);
   }
 
   getDetails() {
     const jwt = this.preferencesService.getItem('jwt');
-    const decodedJWT = this.decodeJWT(jwt!) as { username: string };
-    this.details.username = decodedJWT.username;
-    this.username.next(this.details.username);
-    return this.details;
+    const decodedJWT = this.decodeJWT(jwt!) as {
+      username: string;
+      roles: number[];
+    };
+    console.log(decodedJWT);
+    return decodedJWT;
   }
 }

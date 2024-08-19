@@ -1,3 +1,43 @@
-<p>
-  <button (click)="logout()">Logout!</button>
-</p>
+<div
+  class="min-w-full flex flex-grow flex-col justify-center text-center justify-items-center"
+>
+  User Page
+  <div>
+    <button
+      (click)="logout()"
+      class="font-semibold border-black border-[1px] border-solid rounded-md p-1 px-8 hover:bg-gray-100"
+    >
+      Logout!
+    </button>
+  </div>
+
+  <ul class="flex flex-row ml-2">
+    <li
+      class="rounded-t-md hover:bg-gray-100 hover:cursor-pointer border-[1px] border-b-0 border-black px-2"
+      (click)="selected = 0"
+      [ngClass]="{
+        hidden: !super,
+        'bg-gray-200': selected == 0,
+        'bg-gray-400': selected != 0
+      }"
+    >
+      Super
+    </li>
+    <li
+      class="rounded-t-md hover:bg-gray-100 hover:cursor-pointer border-[1px] border-b-0 border-black px-2"
+      (click)="selected = 1"
+      [ngClass]="{
+        hidden: !admin,
+        'bg-gray-200': selected == 1,
+        'bg-gray-400': selected != 1
+      }"
+    >
+      Admin
+    </li>
+  </ul>
+
+  <ul class="border-t-[1px] border-black">
+    <app-super-panel [ngClass]="super && selected == 0 ? '' : 'hidden'" />
+    <app-panel-admin [ngClass]="admin && selected == 1 ? '' : 'hidden'" />
+  </ul>
+</div>

@@ -8,6 +8,11 @@
       "schematics": {
         "@schematics/angular:component": {
           "style": "css"
+        },
+        "@schematics/angular:guard": {
+          "implements": [
+            "CanActivate"
+      ]
         }
       },
       "root": "",

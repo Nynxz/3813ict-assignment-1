@@ -1,0 +1,36 @@
+<div
+  class="text-center justify-center rounded-md m-4 flex flex-grow flex-col border-black border-solid border-2 max-h-96"
+>
+  <span class="font-bold underline pb-4"> Super User Dashboard </span>
+  <!-- GROUP LIST -->
+  <span class="font-semibold"> Group List </span>
+  <div class="rounded-md flex flex-grow">
+    <ul
+      class="flex flex-col p-2 rounded-md border-[1px] border-black border-solid m-4 gap-1 max-h-72 min-h-max h-max overflow-auto w-1/4"
+    >
+      <li
+        *ngFor="let server of servers; first as isFirst"
+        class="border-black border-solid border-[1px] flex flex-grow flex-col"
+      >
+        <app-panel-server-widget
+          [selected]="selectedServer == server"
+          [server]="server"
+          (click)="selectedServer = server"
+        ></app-panel-server-widget>
+        <!-- <div class="flex flex-grow flex-row justify-between">
+          <div class="flex flex-grow flex-row">
+            <img [src]="server.imageURL" class="w-8 mr-2" />
+            <span class="font-semibold">
+              {{ server.serverName }}
+            </span>
+          </div>
+          <img src="cog-svgrepo-com.svg" alt="svg arrow" class="h-8" />
+        </div> -->
+      </li>
+    </ul>
+    <div class="flex flex-grow border-black border-[1px] rounded-md ml-0 m-4">
+      <app-panel-updateserver-widget [server]="selectedServer" />
+    </div>
+    <button (click)="updateSignal()">Update Signal</button>
+  </div>
+</div>
