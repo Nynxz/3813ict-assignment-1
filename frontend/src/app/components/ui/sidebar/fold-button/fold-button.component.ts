@@ -1,5 +1,12 @@
 import { NgClass } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  signal,
+  Signal,
+} from '@angular/core';
 
 @Component({
   selector: 'sidebar-fold-button',
@@ -10,10 +17,9 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class FoldButtonComponent {
   @Output() clickEvent = new EventEmitter<MouseEvent>();
-  folded = false;
+  @Input() folded: Signal<Boolean> = signal(false);
 
   onClick(event: MouseEvent) {
-    this.folded = !this.folded;
     this.clickEvent.emit(event);
     console.log(this.folded);
   }

@@ -1,9 +1,9 @@
 <button
   class=""
-  [ngClass]="!folded ? 'div-unfolded' : 'div-folded'"
+  [ngClass]="!folded() ? 'div-unfolded' : 'div-folded'"
   (click)="onClick($event)"
 >
-  @if(folded){
+  @if(folded()){
   <img
     src="arrow-narrow-right-move-svgrepo-com.svg"
     alt="svg arrow"

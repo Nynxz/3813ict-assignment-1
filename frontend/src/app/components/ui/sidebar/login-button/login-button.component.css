@@ -33,7 +33,7 @@
 }
 
 .navbar-footer-folder-unfolded {
-  @apply rounded-md  select-none;
+  @apply mt-2  rounded-md  select-none;
 }
 
 .div-unfolded {
