@@ -9,6 +9,7 @@ import {
 import { LoginButtonComponent } from '../ui/sidebar/login-button/login-button.component';
 import { UserService } from '../../services/user.service';
 import { ServerWidgetComponent } from '../ui/sidebar/server-widget/server-widget.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
@@ -19,6 +20,7 @@ import { ServerWidgetComponent } from '../ui/sidebar/server-widget/server-widget
     NgClass,
     LoginButtonComponent,
     ServerWidgetComponent,
+    RouterLink,
   ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css',

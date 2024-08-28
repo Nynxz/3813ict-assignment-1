@@ -7,6 +7,9 @@
 .nav-border-right {
   @apply border-0 border-r-[1px]  border-black; /* line on right of icons when unfolded*/
 }
+.nav-border-left {
+  @apply border-0 border-l-[1px]  border-black; /* line on right of icons when unfolded*/
+}
 
 .nav-hover-fade {
   @apply hover:bg-black hover:bg-opacity-25 hover:cursor-pointer;
@@ -17,7 +20,7 @@
 }
 
 .navbar-home-unfolded {
-  @apply flex flex-row rounded-md hover:cursor-pointer p-2;
+  @apply flex flex-row rounded-md hover:cursor-pointer;
 }
 
 .navbar-hometitle-unfolded {

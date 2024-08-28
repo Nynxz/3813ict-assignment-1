@@ -6,16 +6,28 @@
   "
   class=""
 >
-  <div class="bg-purple-100 flex flex-col">
-    Home
-    <x-button>Click Pls!</x-button>
-    <app-server-widget />
-    <app-server-widget />
-    <app-server-widget />
+  <div class="flex flex-col">
+    <button
+      class="navbar-home-unfolded nav-border nav-hover-fade w-full p-0"
+      routerLink="/"
+    >
+      <img
+        src="house-svgrepo-com.svg"
+        alt="svg arrow"
+        class="h-8 pointer-events-none p-0"
+      />
+      @if(folded()){
+      <div class="nav-border-left navbar-hometitle-unfolded p-0">Bicker</div>
+      }
+    </button>
+    <!-- <x-button>Click Pls!</x-button> -->
+    <app-server-widget [folded]="folded()" serverName="test" />
+    <app-server-widget [folded]="folded()" serverName="test" />
+    <app-server-widget [folded]="folded()" serverName="test" />
   </div>
   <div class="flex flex-col">
+    <div (click)="logout()">logout</div>
     <sidebar-login-button [folded]="folded" />
     <sidebar-fold-button [folded]="folded" (clickEvent)="fold()" />
-    <div (click)="logout()">logout</div>
   </div>
 </div>
