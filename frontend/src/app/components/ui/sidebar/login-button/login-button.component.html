@@ -1,4 +1,22 @@
-<button
+<div class="navbar-footer-user-unfolded nav-border nav-hover-fade">
+  <a
+    [routerLink]="!name() ? '/login' : '/user'"
+    class="bg-red-500 rounded-md flex flex-grow"
+  >
+    <img
+      src="user-svgrepo-com.svg"
+      alt="svg user"
+      class="h-8 select-none pointer-events-none"
+    />
+    <!-- why the hell is this required to move a line of text down a bit.... jeeeezus -->
+    @if(folded()){
+    <div class="flex nav-border-left flex-col w-full justify-evenly">
+      <div class="navbar-footer-user-name-unfolded">{{ name() }}</div>
+    </div>
+    }
+  </a>
+</div>
+<!-- <button
   class=""
   [ngClass]="!folded() ? 'div-unfolded' : 'div-folded'"
   (click)="onClick($event)"
@@ -13,4 +31,4 @@
       }
     </a>
   </div>
-</button>
+</button> -->

@@ -9,11 +9,12 @@ import {
   Signal,
 } from '@angular/core';
 import { UserService } from '../../../../services/user.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'sidebar-login-button',
   standalone: true,
-  imports: [NgClass],
+  imports: [NgClass, RouterLink],
   templateUrl: './login-button.component.html',
   styleUrl: './login-button.component.css',
 })
