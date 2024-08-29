@@ -21,9 +21,9 @@
       }
     </button>
     <!-- <x-button>Click Pls!</x-button> -->
-    <app-server-widget [folded]="folded()" serverName="test" />
-    <app-server-widget [folded]="folded()" serverName="test" />
-    <app-server-widget [folded]="folded()" serverName="test" />
+    @for (server of servers(); track $index) {
+    <app-server-widget [folded]="folded()" [server]="server" />
+    }
   </div>
   <div class="flex flex-col">
     <div (click)="logout()">logout</div>

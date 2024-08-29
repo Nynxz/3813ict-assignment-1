@@ -10,6 +10,7 @@ import { LoginButtonComponent } from '../ui/sidebar/login-button/login-button.co
 import { UserService } from '../../services/user.service';
 import { ServerWidgetComponent } from '../ui/sidebar/server-widget/server-widget.component';
 import { RouterLink } from '@angular/router';
+import { GroupService } from '../../services/group.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -28,11 +29,19 @@ import { RouterLink } from '@angular/router';
 export class SidebarComponent {
   constructor(
     private userPreferences: PreferencesService,
-    private userService: UserService
+    private userService: UserService,
+    private groupService: GroupService
   ) {}
+
+  servers = computed(() => this.groupService.groups());
+
   folded = computed(() =>
     this.userPreferences.preferences().sidebarfolded == 'true' ? true : false
   );
+
+  getServers() {
+    this.groupService.getServers();
+  }
 
   fold() {
     this.userPreferences.setItem(

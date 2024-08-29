@@ -1,14 +1,17 @@
 import { NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { Group } from '../../../../services/group.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-server-widget',
   standalone: true,
-  imports: [NgIf],
+  imports: [NgIf, RouterLink],
   templateUrl: './server-widget.component.html',
   styleUrl: './server-widget.component.css',
 })
 export class ServerWidgetComponent {
+  @Input() server: Group | null = null;
   @Input() serverName = 'server';
   @Input() folded: boolean | null = null;
   @Input() imageURL: string | undefined =
