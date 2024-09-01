@@ -1,26 +1,38 @@
 import { CONFIG } from "./config";
-import express from "express";
+import express, { Router } from "express";
 import { readdirSync } from "fs";
 import cors from "cors";
 import { Logger } from "./lib/logger";
 import { MongoClient } from "mongodb";
 import { config } from "dotenv";
-import { findServers } from "./lib/db";
 config(); //Load .env file
+
+export type GRouter = Router & {
+  gateway: Gateway;
+};
 
 // uh this make the thing work, it do the thing and like yeh, makes it work, thanks
 export class Gateway {
   app;
-  router;
+  router: GRouter;
   db: MongoClient | undefined = undefined;
-
+  debug = false;
   constructor() {
     Logger.logOrangeUnderline("----Gateway----");
     this.app = express();
-    this.router = express.Router();
+    this.router = express.Router() as GRouter;
+    this.router.gateway = this;
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(express.json());
     this.app.use(cors());
+    this.checkDebug();
+  }
+
+  checkDebug() {
+    if (process.env.DEBUG == "true") {
+      this.debug = true;
+      Logger.logDebugRed("DEBUG ENABLED");
+    }
   }
 
   async connectToMongoDB() {
