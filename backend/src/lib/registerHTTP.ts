@@ -1,7 +1,8 @@
 import { Request, Response, Router, IRouter } from "express";
-import { Gateway } from "../gateway";
+import { Gateway, GRouter } from "../gateway";
 import { Logger } from "./logger";
 import { Middleware } from "./middleware";
+import { logResponseStatus } from "./utils";
 /**
  * Enum for the {@link IRouter} methods
  */
@@ -29,18 +30,19 @@ type RouterMethod = "get" | "set" | "delete" | "head" | "post";
 export function registerHTTP(
   method: RouterMethod,
   endpoint: string,
-  router: Router,
+  router: GRouter,
   callback: (req: Request, res: Response) => void,
   middlewares?: Array<Middleware>
 ) {
-  /*Below: Run when Route is Registered by Gateway on Server Start */
+  /*Below runs when Route is Registered by Gateway on Server Start */
   Logger.logGreenUnderline(`++ (${method.toUpperCase()}) ${endpoint}`);
 
   // same as router.get(), etc, just called dynamically and saves using switch/if else
   (router as any)[method](endpoint, (req: Request, res: Response) => {
-    /*Below: Run before every request */
+    /*Below runs before every request */
     // eg: add 'global middleware here, runs before all other middleware'
 
+    /* Core Request Chain*/
     // Recursive middleware chain before running callback
     const runMiddleware = (index: number) => {
       if (index < (middlewares?.length || 0)) {
@@ -49,8 +51,15 @@ export function registerHTTP(
         callback(req, res);
       }
     };
-    runMiddleware(0);
-    /* Below: Run after every request*/
-    // eg: can add anything you want here to always be 'done' with every request (ie. metrics, etc)
+    /* Below runs after every request*/
+    res.on("finish", () => {
+      if (router.gateway.debug) logResponseStatus(res, method, endpoint);
+    });
+    try {
+      // Start request
+      runMiddleware(0);
+    } catch (error) {
+      console.log(error);
+    }
   });
 }
