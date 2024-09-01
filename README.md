@@ -1,10 +1,12 @@
-> [!NOTE] Information
+> [!NOTE] 
+> #### Information
 > - **Name**: Henry Lee
 > - **Student Number**: s5238766
 > - **Class**: 3813ICT - Web Application Development
 > - **Due Date**: 5/09/2024 @ 8:00am
 
-> [!WARNING] README Requirements
+> [!WARNING] 
+> #### README Requirements
 > - [**Git**](#git): Describe the organization of your Git repository and how you used it during the
 > development of your solution (branching, update frequency, server/frontend etc.)
 > - [**Data Structures**](#data-structures): Description of data structures used in both the client and server sides to represent the
@@ -17,7 +19,8 @@
 > page will be updated.
 
 ### Overview
->[!TIP] Key Dependencies 
+>[!TIP] 
+> #### Key Dependencies 
 > #### [v2 Frontend](https://github.com/Nynxz/3813ict-assignment-1/tree/v2/frontend)
 > - Using [Angular Version 18](https://angular.dev/overview)
 > - Using [TailwindCSS](https://tailwindcss.com/docs/guides/angular)
