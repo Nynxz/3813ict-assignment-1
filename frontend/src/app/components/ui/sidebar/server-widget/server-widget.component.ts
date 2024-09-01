@@ -1,7 +1,7 @@
 import { NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { Group } from '../../../../services/group.service';
 import { RouterLink } from '@angular/router';
+import { Group } from '@services/group/group.service';
 
 @Component({
   selector: 'app-server-widget',

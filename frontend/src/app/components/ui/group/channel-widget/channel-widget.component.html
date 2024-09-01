@@ -1,0 +1,10 @@
+@if (channelID) {
+<div class="border-[1px] border-black rounded-md w-max flex flex-grow">
+  <a
+    class="flex flex-grow rounded-md px-2 select-none hover:cursor-pointer"
+    [routerLink]="'/group/' + serverID + '/' + channelID"
+  >
+    # Home Channel
+  </a>
+</div>
+}
