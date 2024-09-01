@@ -4,7 +4,8 @@ import { Gateway } from "../gateway";
 import { createServer, findServers, updateServer } from "../lib/db";
 import { MongoClient } from "mongodb";
 import { verify } from "jsonwebtoken";
-import { requireBodyKey, requireCool, requireHello } from "../lib/middleware";
+import { requireBodyKey, requireValidRole } from "../lib/middleware";
+import { Roles } from "./login";
 
 // TODO: Move server shit out of test.ts into actual 'server.ts' file
 export default (router: Router, gateway: Gateway) => {
@@ -63,5 +64,15 @@ export default (router: Router, gateway: Gateway) => {
       res.send(`Hello ${req.body.name}`);
     },
     [requireBodyKey({ key: "name" })]
+  );
+
+  registerHTTP(
+    "get",
+    "/jwttest",
+    router,
+    async (req: Request, res: Response) => {
+      res.send(`Hello ${req.body.name}`);
+    },
+    [requireValidRole(Roles.NOBODY)]
   );
 };

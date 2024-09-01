@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Roles } from "../routes/login";
+import { verify } from "jsonwebtoken";
 
 export type Middleware = (
   req: Request,
@@ -7,12 +8,20 @@ export type Middleware = (
   next: NextFunction
 ) => void;
 
-export const requireValidRole = (options: { role: Roles }) => {
+export const requireValidRole = (role: Roles) => {
   return function (req: Request, res: Response, next: NextFunction) {
-    if ((req.body.roles as any[]).includes(options.role)) {
-      next();
+    // decode jwt, validate, get roles array, check if array contains required role
+    if (req.body.jwt) {
+      const jwtRoles = verify(req.body.jwt, "thisisasecret:):)") as {
+        roles: Roles[];
+      };
+      if (jwtRoles.roles.includes(role)) {
+        next();
+      } else {
+        res.send("Invalid JWT Role: " + Roles[role]);
+      }
     } else {
-      res.send("Invalid JWT Role!");
+      res.send("No given JWT");
     }
   };
 };

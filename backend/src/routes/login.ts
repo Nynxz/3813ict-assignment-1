@@ -8,6 +8,7 @@ export enum Roles {
   "USER",
   "ADMIN",
   "SUPER",
+  "NOBODY",
 }
 
 type Group = {
