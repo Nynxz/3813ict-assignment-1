@@ -17,11 +17,24 @@ import { GroupService } from '@services/group/group.service';
   styleUrl: './super-panel.component.css',
 })
 export class SuperPanelComponent {
-  servers: any;
-  selectedServer: any = { serverName: '' };
+  groups: any;
+  selectedGroup: any = { groupName: '' };
+  creating = true;
   constructor(private groupService: GroupService) {}
 
   ngOnInit(): void {
-    this.groupService.getServers().subscribe((e) => (this.servers = e));
+    this.groupService.getGroups().subscribe((e) => (this.groups = e));
+  }
+
+  newGroup() {
+    this.creating = true;
+    this.selectedGroup = { groupName: '' };
+    console.log(this.selectedGroup);
+  }
+
+  selectGroup(group: any) {
+    this.creating = false;
+    this.selectedGroup = group;
+    console.log(this.selectedGroup);
   }
 }

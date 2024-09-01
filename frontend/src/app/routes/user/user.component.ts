@@ -33,7 +33,7 @@ export class UserComponent implements OnInit {
   // }
   ngOnInit(): void {
     this.tabs = this.userService.user().roles as number[];
-    this.tabs.forEach((e) => {
+    this.tabs?.forEach((e) => {
       switch (e) {
         case Roles.ADMIN:
           this.admin = true;
@@ -43,5 +43,9 @@ export class UserComponent implements OnInit {
           break;
       }
     });
+  }
+
+  logout() {
+    this.userService.logout();
   }
 }

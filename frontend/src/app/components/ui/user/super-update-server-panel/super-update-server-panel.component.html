@@ -1,5 +1,10 @@
 <div class="border-t-black p-2">
-  {{ server._id }}
+  <div
+    class="border-black border-[1px] bg-white rounded-md underline font-bold"
+  >
+    {{ creating ? "Creating New Server" : "Updating Server" }}
+  </div>
+  {{ group._id || "" }}
   <form (ngSubmit)="handleSubmit()" class="flex flex-col">
     <label>
       Server Name
@@ -7,7 +12,7 @@
         type="text"
         name="email"
         class="w-full rounded-md border-black border-[1px]"
-        [(ngModel)]="server.serverName"
+        [(ngModel)]="group.groupName"
       />
     </label>
     <label>
@@ -16,13 +21,20 @@
         type="text"
         name="imageurl"
         class="w-full rounded-md border-black border-[1px]"
-        [(ngModel)]="server.imageURL"
+        [(ngModel)]="group.imageURL"
       />
     </label>
     <input
       type="submit"
       class="w-full rounded-md border-black border-[1px] mt-3 cursor-pointer hover:bg-black hover:bg-opacity-25 mb-2"
-      value="Update"
+      [value]="creating ? 'Create' : 'Update'"
     />
   </form>
+  @if(error != ''){
+  <div
+    class="border-black border-[1px] text-red-600 bg-white rounded-md underline font-bold"
+  >
+    {{ error }}
+  </div>
+  }
 </div>

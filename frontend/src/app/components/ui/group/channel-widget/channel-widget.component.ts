@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ChatService } from '@services/chat/chat.service';
 
 @Component({
   selector: 'group-channel-widget',
@@ -13,4 +14,11 @@ export class ChannelWidgetComponent {
   channelID: number | undefined;
   @Input()
   serverID: string | undefined;
+
+  constructor(private chatService: ChatService) {}
+
+  setChannel(channelID: number) {
+    console.log('set channel', channelID);
+    this.chatService.selectChannel(channelID);
+  }
 }

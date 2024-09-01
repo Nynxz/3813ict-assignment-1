@@ -8,7 +8,7 @@ import { environment } from '../../../environments/environment';
 export type Group = {
   _id: string;
   imageURL: string;
-  serverName: string;
+  groupName: string;
 };
 
 @Injectable({
@@ -26,27 +26,27 @@ export class GroupService {
   }
 
   updateServers() {
-    this.getServers().subscribe((e) => {
+    this.getGroups().subscribe((e) => {
       console.log(e);
       this.groups.set(e);
     });
   }
 
-  getServers() {
+  getGroups() {
     return this.httpClient.get(
-      environment.backend_base_URL + '/servers'
+      environment.backend_base_URL + '/groups'
     ) as Observable<Group[]>;
   }
 
-  updateServer(server: any) {
+  updateServer(group: any) {
     try {
       console.log('Trying ping?');
       // return this.httpClient.get('http://localhost:3010/ping');
       const jwt = this.preferences.getItem('jwt');
       return this.httpClient
         .post(
-          environment.backend_base_URL + '/server/update',
-          JSON.stringify({ ...server, jwt }),
+          environment.backend_base_URL + '/groups/update',
+          JSON.stringify({ group, jwt }),
           {
             headers: {
               'Content-Type': 'application/json',
@@ -66,6 +66,18 @@ export class GroupService {
             });
           })
         );
+    } catch (error) {}
+    return;
+  }
+
+  createGroup(group: { groupName: string }) {
+    try {
+      const jwt = this.preferences.getItem('jwt');
+      return this.httpClient.post(
+        environment.backend_base_URL + '/groups/create',
+        JSON.stringify({ group, jwt }),
+        { headers: { 'Content-Type': 'application/json' } }
+      );
     } catch (error) {}
     return;
   }

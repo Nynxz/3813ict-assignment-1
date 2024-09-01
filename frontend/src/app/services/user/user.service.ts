@@ -69,7 +69,7 @@ export class UserService {
     return this.httpClient
       .post<LoginResponse>(
         environment.backend_base_URL + '/user/login',
-        JSON.stringify({ email, password }),
+        JSON.stringify({ user: { email, password } }),
         {
           headers: {
             'Content-Type': 'application/json',

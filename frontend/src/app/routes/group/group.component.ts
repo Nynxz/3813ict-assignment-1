@@ -1,10 +1,18 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  computed,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 
-import { NavigationStart, Router } from '@angular/router';
+import { NavigationStart, Route, Router } from '@angular/router';
 import { ChannelSidebarComponent } from '@components/ui/group/channel-sidebar/channel-sidebar.component';
 import { ChannelWidgetComponent } from '@components/ui/group/channel-widget/channel-widget.component';
 import { ChatPanelComponent } from '@components/ui/group/chat-panel/chat-panel.component';
+import { ChatService } from '@services/chat/chat.service';
 import { Group, GroupService } from '@services/group/group.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-group',
@@ -28,15 +36,39 @@ export class GroupComponent implements OnChanges {
   channel = '';
   server: Group | undefined;
 
-  constructor(private groupService: GroupService) {
-    this.groupService.getServers().subscribe((e) => {
+  // selected = computed(() => {
+  //   return (
+  //     ' ' +
+  //     JSON.stringify(this.chatService.selectedChannel()) +
+  //     ' ' +
+  //     JSON.stringify(this.chatService.selectedGroup())
+  //   );
+  // });
+
+  selectedGroup = computed(() => {
+    return this.chatService.selectedGroup();
+  });
+  selectedChannel = computed(() => {
+    return this.chatService.selectedChannel();
+  });
+
+  constructor(
+    private groupService: GroupService,
+    private chatService: ChatService,
+    private router: Router
+  ) {
+    this.groupService.getGroups().subscribe((e) => {
       this.server = e.find((a) => a._id == this.id);
     });
+    if (!this.selectedGroup()) {
+      console.log('NO GROUP?');
+      this.router.navigateByUrl('/');
+    }
   }
 
   ngOnChanges() {
     console.log(`Get Content - Channel:${this.channel}[Server:${this.id}]`);
-    this.groupService.getServers().subscribe((e) => {
+    this.groupService.getGroups().subscribe((e) => {
       this.server = e.find((a) => a._id == this.id);
     });
   }
