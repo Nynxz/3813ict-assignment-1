@@ -5,7 +5,7 @@ export default (key: string) => {
     if ((req.body as Object).hasOwnProperty(key)) {
       next();
     } else {
-      res.send("Cannot find " + key);
+      res.status(400).send({ error: "Cannot find " + key });
     }
   };
 };

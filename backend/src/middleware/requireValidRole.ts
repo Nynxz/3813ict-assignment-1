@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { Roles } from "../routes/login";
 import { verify } from "jsonwebtoken";
+import { Roles } from "../db/user";
 
 export default (role: Roles) => {
   return function (req: Request, res: Response, next: NextFunction) {
@@ -12,10 +12,10 @@ export default (role: Roles) => {
       if (jwtRoles.roles.includes(role)) {
         next();
       } else {
-        res.send("Invalid JWT Role: " + Roles[role]);
+        res.status(400).send({ error: "Invalid JWT Role: " + Roles[role] });
       }
     } else {
-      res.send("No given JWT");
+      res.status(400).send({ error: "No given JWT" });
     }
   };
 };
