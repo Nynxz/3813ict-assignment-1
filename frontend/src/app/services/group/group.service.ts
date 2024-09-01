@@ -3,6 +3,7 @@ import { Injectable, signal } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { PreferencesService } from '@services/preferences/preferences.service';
+import { environment } from '../../../environments/environment';
 
 export type Group = {
   _id: string;
@@ -32,9 +33,9 @@ export class GroupService {
   }
 
   getServers() {
-    return this.httpClient.get('http://localhost:3010/servers') as Observable<
-      Group[]
-    >;
+    return this.httpClient.get(
+      environment.backend_base_URL + '/servers'
+    ) as Observable<Group[]>;
   }
 
   updateServer(server: any) {
@@ -44,7 +45,7 @@ export class GroupService {
       const jwt = this.preferences.getItem('jwt');
       return this.httpClient
         .post(
-          'http://localhost:3010/server/update',
+          environment.backend_base_URL + '/server/update',
           JSON.stringify({ ...server, jwt }),
           {
             headers: {

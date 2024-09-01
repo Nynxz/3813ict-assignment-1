@@ -11,6 +11,7 @@ import { jwtDecode } from 'jwt-decode';
 import { Router } from '@angular/router';
 import { PreferencesService } from '@services/preferences/preferences.service';
 import { GroupService } from '@services/group/group.service';
+import { environment } from '../../../environments/environment';
 type LoginResponse = {
   jwt: string;
 };
@@ -67,7 +68,7 @@ export class UserService {
   _backendLogin(email: string, password: string) {
     return this.httpClient
       .post<LoginResponse>(
-        'http://localhost:3010/login',
+        environment.backend_base_URL + '/user/login',
         JSON.stringify({ email, password }),
         {
           headers: {
