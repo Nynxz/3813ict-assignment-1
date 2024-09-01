@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, computed, Input } from '@angular/core';
 import { ChannelWidgetComponent } from '../channel-widget/channel-widget.component';
 import { Group } from '@services/group/group.service';
+import { ChatService } from '@services/chat/chat.service';
 
 @Component({
   selector: 'group-channel-sidebar',
@@ -10,6 +11,8 @@ import { Group } from '@services/group/group.service';
   styleUrl: './channel-sidebar.component.css',
 })
 export class ChannelSidebarComponent {
-  @Input()
-  server: Group | undefined;
+  // @Input()
+  // server: Group | undefined;
+  server = computed(() => this.chatService.selectedGroup());
+  constructor(private chatService: ChatService) {}
 }

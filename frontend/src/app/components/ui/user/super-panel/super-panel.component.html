@@ -9,13 +9,19 @@
       class="flex flex-col p-2 rounded-md border-[1px] border-black border-solid m-4 gap-1 max-h-72 min-h-max h-max overflow-auto w-1/4"
     >
       <li
-        *ngFor="let server of servers; first as isFirst"
+        class="border-black border-[1px] rounded-md hover:cursor-pointer hover:bg-gray-600"
+        (click)="newGroup()"
+      >
+        Create Server
+      </li>
+      <li
+        *ngFor="let group of groups; first as isFirst"
         class="border-black border-solid border-[1px] flex flex-grow flex-col"
       >
         <user-super-server-widget
-          [selected]="selectedServer == server"
-          [server]="server"
-          (click)="selectedServer = server"
+          [selected]="selectGroup == group"
+          [server]="group"
+          (click)="selectGroup(group)"
         ></user-super-server-widget>
         <!-- <div class="flex flex-grow flex-row justify-between">
           <div class="flex flex-grow flex-row">
@@ -29,7 +35,10 @@
       </li>
     </ul>
     <div class="flex flex-grow border-black border-[1px] rounded-md ml-0 m-4">
-      <user-super-update-server-panel [server]="selectedServer" />
+      <user-super-update-server-panel
+        [group]="selectedGroup"
+        [creating]="creating"
+      />
       Maybe Group User Panel (add remove)? idk
     </div>
     <!-- <button (click)="updateSignal()">Update Signal</button> -->

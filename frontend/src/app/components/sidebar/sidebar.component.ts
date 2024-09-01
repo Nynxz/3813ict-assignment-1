@@ -37,7 +37,7 @@ export class SidebarComponent {
   );
 
   getServers() {
-    this.groupService.getServers();
+    this.groupService.getGroups();
   }
 
   fold() {
@@ -45,9 +45,5 @@ export class SidebarComponent {
       'sidebarfolded',
       this.folded() ? 'false' : 'true'
     );
-  }
-
-  logout() {
-    this.userService.logout();
   }
 }

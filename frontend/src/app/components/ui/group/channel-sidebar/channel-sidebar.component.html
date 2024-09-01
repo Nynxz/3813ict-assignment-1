@@ -1,11 +1,10 @@
-<div class="border-r-[1px] border-black h-full rounded-md p-2">
+<div class="border-r-[1px] border-black h-full rounded-md p-2 max-w-40 w-40">
   <h2 class="font-bold text-xl mb-2 overflow-clip line-clamp-1">
-    {{ server?.serverName || "Loading..." }}
+    {{ server()?.groupName || "Loading..." }}
   </h2>
   <ul class="flex gap-2 flex-col">
     @for (item of [1, 2, 3, 4, 5]; track $index) {
-
-    <group-channel-widget [serverID]="server?._id" [channelID]="item" />
+    <group-channel-widget [serverID]="server()?._id" [channelID]="item" />
     }
   </ul>
 </div>
