@@ -1,10 +1,10 @@
-import { Router } from "express";
+import { Request, Response, Router } from "express";
 import { registerHTTP } from "../lib/registerHTTP";
 import { Gateway } from "../gateway";
 import { createServer, findServers, updateServer } from "../lib/db";
 import { MongoClient } from "mongodb";
 import { verify } from "jsonwebtoken";
-import { requireCool, requireHello } from "../lib/middleware";
+import { requireBodyKey, requireCool, requireHello } from "../lib/middleware";
 
 // TODO: Move server shit out of test.ts into actual 'server.ts' file
 export default (router: Router, gateway: Gateway) => {
@@ -52,6 +52,16 @@ export default (router: Router, gateway: Gateway) => {
       console.log("GOT PING");
       res.send("pong");
     },
-    [requireHello, requireCool]
+    [requireBodyKey({ key: "hello" })]
+  );
+
+  registerHTTP(
+    "get",
+    "/hello",
+    router,
+    async (req: Request, res: Response) => {
+      res.send(`Hello ${req.body.name}`);
+    },
+    [requireBodyKey({ key: "name" })]
   );
 };

@@ -17,6 +17,16 @@ export const requireValidRole = (options: { role: Roles }) => {
   };
 };
 
+export const requireBodyKey = (options: { key: string }) => {
+  return function (req: Request, res: Response, next: NextFunction) {
+    if ((req.body as Object).hasOwnProperty(options.key)) {
+      next();
+    } else {
+      res.send("Cannot find " + options.key);
+    }
+  };
+};
+
 export const requireValidJWT: Middleware = (req: Request, res: Response) => {
   if (req.body) {
     console.log(req.body);

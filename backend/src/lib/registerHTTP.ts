@@ -33,10 +33,15 @@ export function registerHTTP(
   callback: (req: Request, res: Response) => void,
   middlewares?: Array<Middleware>
 ) {
+  /*Below: Run when Route is Registered by Gateway on Server Start */
   Logger.logGreenUnderline(`++ (${method.toUpperCase()}) ${endpoint}`);
+
   // same as router.get(), etc, just called dynamically and saves using switch/if else
   (router as any)[method](endpoint, (req: Request, res: Response) => {
-    // Add callback to end of middlewares
+    /*Below: Run before every request */
+    // eg: add 'global middleware here, runs before all other middleware'
+
+    // Recursive middleware chain before running callback
     const runMiddleware = (index: number) => {
       if (index < (middlewares?.length || 0)) {
         middlewares![index](req, res, () => runMiddleware(index + 1));
@@ -44,9 +49,8 @@ export function registerHTTP(
         callback(req, res);
       }
     };
-
     runMiddleware(0);
-    //can add anything you want here to always be 'done' with every request (ie. metrics, middleware etc)
-    // TODO: add middleware optional parameter array, use before callback to add things like easy JWT auth
+    /* Below: Run after every request*/
+    // eg: can add anything you want here to always be 'done' with every request (ie. metrics, etc)
   });
 }
