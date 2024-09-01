@@ -4,7 +4,7 @@ import { Gateway } from "../gateway";
 import { Logger } from "../lib/logger";
 import { sign } from "jsonwebtoken";
 
-enum Roles {
+export enum Roles {
   "USER",
   "ADMIN",
   "SUPER",

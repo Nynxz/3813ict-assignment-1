@@ -1,6 +1,7 @@
 import { Request, Response, Router, IRouter } from "express";
 import { Gateway } from "../gateway";
 import { Logger } from "./logger";
+import { Middleware } from "./middleware";
 /**
  * Enum for the {@link IRouter} methods
  */
@@ -29,11 +30,23 @@ export function registerHTTP(
   method: RouterMethod,
   endpoint: string,
   router: Router,
-  callback: (req: Request, res: Response) => void
+  callback: (req: Request, res: Response) => void,
+  middlewares?: Array<Middleware>
 ) {
   Logger.logGreenUnderline(`++ (${method.toUpperCase()}) ${endpoint}`);
   // same as router.get(), etc, just called dynamically and saves using switch/if else
   (router as any)[method](endpoint, (req: Request, res: Response) => {
-    callback(req, res);
+    // Add callback to end of middlewares
+    const runMiddleware = (index: number) => {
+      if (index < (middlewares?.length || 0)) {
+        middlewares![index](req, res, () => runMiddleware(index + 1));
+      } else {
+        callback(req, res);
+      }
+    };
+
+    runMiddleware(0);
+    //can add anything you want here to always be 'done' with every request (ie. metrics, middleware etc)
+    // TODO: add middleware optional parameter array, use before callback to add things like easy JWT auth
   });
 }
