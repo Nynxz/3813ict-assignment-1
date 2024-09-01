@@ -4,8 +4,9 @@ import { Gateway } from "../gateway";
 import { createServer, findServers, updateServer } from "../lib/db";
 import { MongoClient } from "mongodb";
 import { verify } from "jsonwebtoken";
-import { requireBodyKey, requireValidRole } from "../lib/middleware";
 import { Roles } from "./login";
+import requireValidRole from "../middleware/requireValidRole";
+import requireBodyKey from "../middleware/requireBodyKey";
 
 // TODO: Move server shit out of test.ts into actual 'server.ts' file
 export default (router: Router, gateway: Gateway) => {
@@ -53,7 +54,7 @@ export default (router: Router, gateway: Gateway) => {
       console.log("GOT PING");
       res.send("pong");
     },
-    [requireBodyKey({ key: "hello" })]
+    [requireBodyKey("hello")]
   );
 
   registerHTTP(
@@ -63,7 +64,7 @@ export default (router: Router, gateway: Gateway) => {
     async (req: Request, res: Response) => {
       res.send(`Hello ${req.body.name}`);
     },
-    [requireBodyKey({ key: "name" })]
+    [requireBodyKey("name")]
   );
 
   registerHTTP(
