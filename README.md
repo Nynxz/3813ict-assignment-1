@@ -30,7 +30,11 @@
 ### Git
 Initial project was created in `main branch`. Became a mess as I learnt new things about Angular, decided to create `v2 branch` which is a recreation of the main branch. 
 Both the Angular Frontend and the Express Backend are contained within a single repository
+Initial project was created in `main branch`. Became a mess as I learnt new things about Angular, decided to create `v2 branch` which is a recreation of the main branch. 
+Both the Angular Frontend and the Express Backend are contained within a single repository
 - https://github.com/Nynxz/3813ict-assignment-1
+
+v1 was contained within `ngfrontend` while the new v2 frontend is contained within the `frontend` directory. The Express backend is contained within the `backend` directory.
 
 v1 was contained within `ngfrontend` while the new v2 frontend is contained within the `frontend` directory. The Express backend is contained within the `backend` directory.
 
@@ -116,6 +120,31 @@ Message
     - Blocks routing unless the user is logged in
     - Redirects to `/login`
     - Used On `/user` and `/chat`
+### Express
+### Routes
+### Interaction
+### REST API
+
+- **ROUTER /user**
+  - POST /login
+    - Checks if username and password is valid in database
+    - Expected Request Payload: `{username: string, password: string}`
+    - Returns: `{jwt: JWT}` - Encoded JWT 
+    - Decoded JWT: `{id: User._id, iat: number, exp:number}`
+  - POST /logout????
+
+- **ROUTER /chat**
+  - POST /message
+    - Creates a new chat message
+    - Expected Request Payload: `{content: string, channel: Channel._id, jwt: JWT}`
+    - Requires: JWT Owner to be a User in the Group which contains the Channel
+  - DELETE /message
+    - Deletes a chat message
+    - Expected Request Payload: `{id: Message._id , jwt: JWT}`
+    - Requires: JWT Owner to be message sender, or Admin of the Group where message was sent
+  - PUT /message
+    - Updates a chat message
+
 ### Express
 ### Routes
 ### Interaction
