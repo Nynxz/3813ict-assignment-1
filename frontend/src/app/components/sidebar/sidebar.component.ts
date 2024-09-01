@@ -2,15 +2,12 @@ import { Component, computed } from '@angular/core';
 import { ButtonComponent } from '../ui/button/button.component';
 import { FoldButtonComponent } from '../ui/sidebar/fold-button/fold-button.component';
 import { NgClass } from '@angular/common';
-import {
-  PreferencesService,
-  UserPreferences,
-} from '../../services/preferences.service';
 import { LoginButtonComponent } from '../ui/sidebar/login-button/login-button.component';
-import { UserService } from '../../services/user.service';
 import { ServerWidgetComponent } from '../ui/sidebar/server-widget/server-widget.component';
 import { RouterLink } from '@angular/router';
-import { GroupService } from '../../services/group.service';
+import { PreferencesService } from '@services/preferences/preferences.service';
+import { UserService } from '@services/user/user.service';
+import { GroupService } from '@services/group/group.service';
 
 @Component({
   selector: 'app-sidebar',

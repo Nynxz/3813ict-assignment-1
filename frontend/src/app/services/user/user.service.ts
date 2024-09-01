@@ -1,9 +1,16 @@
-import { Injectable, OnInit, signal, Signal } from '@angular/core';
-import { PreferencesService } from './preferences.service';
+import {
+  Injectable,
+  OnInit,
+  signal,
+  Signal,
+  WritableSignal,
+} from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, throwError } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { Router } from '@angular/router';
+import { PreferencesService } from '@services/preferences/preferences.service';
+import { GroupService } from '@services/group/group.service';
 type LoginResponse = {
   jwt: string;
 };
@@ -19,7 +26,8 @@ export class UserService {
   constructor(
     private preferencesService: PreferencesService,
     private httpClient: HttpClient,
-    private router: Router
+    private router: Router,
+    private groupService: GroupService
   ) {
     console.log('ON INIT USER');
     this.auto_login();
@@ -30,13 +38,16 @@ export class UserService {
   // getting the JWT from the preferences service and trying to auto login etc
 
   name = signal('');
+  user: WritableSignal<any | undefined> = signal(undefined);
 
   auto_login() {
     let _jwt = this.preferencesService.getItem('jwt');
     if (_jwt) {
       try {
         this.name.set((jwtDecode(_jwt) as LoginJWT).username);
-        this.router.navigateByUrl('/user');
+        this.user.set(jwtDecode(_jwt) as LoginJWT);
+        this.groupService.updateServers();
+        // this.router.navigateByUrl('/user');
       } catch (error) {
         console.log(error);
       }
@@ -48,6 +59,7 @@ export class UserService {
       this.preferencesService.setItem('jwt', e.jwt);
       console.log(e.jwt);
       this.auto_login();
+      this.router.navigateByUrl('/user');
     });
     // this.name.set(_name);
   }
@@ -77,5 +89,6 @@ export class UserService {
     this.preferencesService.setItem('name', '');
     this.preferencesService.setItem('jwt', '');
     this.router.navigateByUrl('/login');
+    this.groupService.groups.set([]);
   }
 }

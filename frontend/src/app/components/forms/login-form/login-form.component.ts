@@ -1,7 +1,7 @@
 import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { UserService } from '../../../services/user.service';
+import { UserService } from '@services/user/user.service';
 
 @Component({
   selector: 'login-form',

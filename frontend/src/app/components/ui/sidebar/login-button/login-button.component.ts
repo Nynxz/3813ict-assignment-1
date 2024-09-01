@@ -8,8 +8,8 @@ import {
   signal,
   Signal,
 } from '@angular/core';
-import { UserService } from '../../../../services/user.service';
 import { RouterLink } from '@angular/router';
+import { UserService } from '@services/user/user.service';
 
 @Component({
   selector: 'sidebar-login-button',
