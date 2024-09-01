@@ -1,44 +1,44 @@
-import { Router } from "express";
+import { Request, Response, Router } from "express";
 import { registerHTTP } from "../lib/registerHTTP";
-import { Gateway } from "../gateway";
-import { createServer, findServers, updateServer } from "../lib/db";
-import { MongoClient } from "mongodb";
-import { verify } from "jsonwebtoken";
+import { Gateway, GRouter } from "../gateway";
+import requireValidRole from "../middleware/requireValidRole";
+import requireBodyKey from "../middleware/requireBodyKey";
+import { Roles } from "../db/user";
 
-export default (router: Router, gateway: Gateway) => {
+export default (router: GRouter, gateway: Gateway) => {
   registerHTTP("get", "/", router, (req, res) => {
     res.send("Connected to Backend");
   });
 
-  registerHTTP("get", "/servers", router, async (req, res) => {
-    res.send(await findServers(gateway.db as MongoClient));
-  });
+  //TODO: table tennis kinda bad, to remove
+  registerHTTP(
+    "get",
+    "/ping",
+    router,
+    async (req, res) => {
+      console.log("GOT PING");
+      res.send("pong");
+    },
+    [requireBodyKey("hello")]
+  );
 
-  registerHTTP("post", "/createserver", router, async (req, res) => {
-    const server = await createServer(
-      gateway.db as MongoClient,
-      req.body.serverName as String
-    );
-    res.send("Complete " + JSON.stringify(server));
-  });
+  registerHTTP(
+    "get",
+    "/hello",
+    router,
+    async (req: Request, res: Response) => {
+      res.send(`Hello ${req.body.name}`);
+    },
+    [requireBodyKey("name")]
+  );
 
-  registerHTTP("post", "/server/update", router, async (req, res) => {
-    console.log("GOT REQUEST");
-    console.log(req.body);
-    try {
-      const decodedJWT = verify(req.body.jwt, "thisisasecret:):)");
-      console.log(decodedJWT);
-      const server = await updateServer(gateway.db as MongoClient, req.body);
-      res.send(server);
-    } catch (error) {
-      console.log(error);
-      res.statusCode = 401;
-      res.send(JSON.stringify({ error: "invalid JWT" }));
-    }
-  });
-
-  registerHTTP("get", "/ping", router, async (req, res) => {
-    console.log("GOT PING");
-    res.send("pong");
-  });
+  registerHTTP(
+    "get",
+    "/jwttest",
+    router,
+    async (req: Request, res: Response) => {
+      res.send(`Hello ${req.body.name}`);
+    },
+    [requireValidRole(Roles.NOBODY)]
+  );
 };

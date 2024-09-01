@@ -1,0 +1,47 @@
+/* Unfolded */
+
+.nav-border {
+  @apply border-black border-[1px];
+}
+
+.nav-border-right {
+  @apply border-0 border-r-[1px]  border-black; /* line on right of icons when unfolded*/
+}
+
+.nav-hover-fade {
+  @apply hover:bg-black hover:bg-opacity-25 hover:cursor-pointer;
+}
+
+.navbar-main-unfolded {
+  @apply bg-slate-600 rounded-r-md  flex h-full w-44 p-2 flex-col justify-between;
+}
+
+.navbar-home-unfolded {
+  @apply flex flex-row rounded-md hover:cursor-pointer;
+}
+
+.navbar-hometitle-unfolded {
+  @apply w-full bg-slate-600 rounded-r-md text-center font-bold text-2xl;
+}
+
+.navbar-footer-user-unfolded {
+  @apply flex flex-row  rounded-md  select-none;
+}
+
+.navbar-footer-user-name-unfolded {
+  @apply h-full ml-2 font-bold underline text-xl capitalize;
+}
+
+.navbar-footer-folder-unfolded {
+  @apply rounded-md  select-none;
+}
+
+.div-unfolded {
+  @apply navbar-footer-folder-unfolded nav-border nav-hover-fade;
+}
+
+.div-folded {
+  /* @apply div-folded; */
+  @apply navbar-footer-folder-unfolded nav-border nav-hover-fade;
+  @apply w-full;
+}

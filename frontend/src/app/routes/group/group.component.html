@@ -1,0 +1,19 @@
+<div class="flex flex-grow bg-gray-500">
+  <group-channel-sidebar [server]="server" />
+  @if (channel) {
+  <div class="flex flex-grow flex-col">
+    <div class="m-2 mb-0 rounded-md border-black border-[1px] font-bold">
+      Channel Name
+    </div>
+    <group-chat-panel />
+  </div>
+  } @else {
+  <div class="flex flex-grow flex-col min-w-max w-full">
+    <div
+      class="font-bold underline text-3xl flex w-full text-center align-middle justify-center min-w-max"
+    >
+      Welcome to {{ server?.serverName }}!
+    </div>
+  </div>
+  }
+</div>
