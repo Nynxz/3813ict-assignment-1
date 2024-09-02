@@ -1,9 +1,8 @@
 import { Component, computed } from '@angular/core';
-import { ButtonComponent } from '../ui/button/button.component';
-import { FoldButtonComponent } from '../ui/sidebar/fold-button/fold-button.component';
+import { FoldButtonComponent } from './fold-button/fold-button.component';
 import { NgClass } from '@angular/common';
-import { LoginButtonComponent } from '../ui/sidebar/login-button/login-button.component';
-import { ServerWidgetComponent } from '../ui/sidebar/server-widget/server-widget.component';
+import { LoginButtonComponent } from './login-button/login-button.component';
+import { ServerWidgetComponent } from './server-widget/server-widget.component';
 import { RouterLink } from '@angular/router';
 import { PreferencesService } from '@services/preferences/preferences.service';
 import { GroupService } from '@services/group/group.service';
@@ -12,7 +11,6 @@ import { GroupService } from '@services/group/group.service';
   selector: 'app-sidebar',
   standalone: true,
   imports: [
-    ButtonComponent,
     FoldButtonComponent,
     NgClass,
     LoginButtonComponent,

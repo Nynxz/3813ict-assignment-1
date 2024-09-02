@@ -16,9 +16,7 @@ export class LoginFormComponent {
   password = '';
   Error = new Error();
 
-  constructor(
-    private userService: UserService // private helloWorldService: HelloworldService, // private preferencesService: PreferencesService, // private loginService: LoginService, // private userService: UserService, // private router: Router
-  ) {}
+  constructor(private userService: UserService) {}
 
   handleSubmit() {
     if (this.email == '' || this.password == '') {
