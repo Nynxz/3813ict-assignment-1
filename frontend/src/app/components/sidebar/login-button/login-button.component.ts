@@ -20,14 +20,7 @@ import { UserService } from '@services/user/user.service';
 })
 export class LoginButtonComponent {
   //inject duh user service, use duh user service, be the user service :) - someone, 2024
-  constructor(private userService: UserService) {}
-
-  @Output() clickEvent = new EventEmitter<MouseEvent>();
   @Input() folded: Signal<Boolean> = signal(false);
-  name = computed(() => this.userService.name());
-
-  onClick(event: MouseEvent) {
-    this.clickEvent.emit(event);
-    console.log(this.folded);
-  }
+  name = computed(() => this.userService.user()?.username);
+  constructor(private userService: UserService) {}
 }
