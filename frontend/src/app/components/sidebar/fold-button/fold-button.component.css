@@ -1,0 +1,16 @@
+.div-unfolded {
+  @apply mt-2 rounded-md select-none border-black border-[1px] hover:bg-black hover:bg-opacity-25 hover:cursor-pointer;
+}
+
+.div-folded {
+  /* @apply div-folded; */
+  @apply div-unfolded w-full;
+}
+
+.img-unfolded {
+  @apply h-8 select-none pointer-events-none;
+}
+
+.img-folded {
+  @apply rotate-180 img-unfolded;
+}
