@@ -1,0 +1,15 @@
+.outer-div {
+  @apply relative flex flex-row rounded-md border-black border-[1px] mt-2;
+}
+
+.notif-outer-span {
+  @apply absolute right-[-6px] top-[-6px] flex h-3 w-3;
+}
+
+.notif-pulse {
+  @apply animate-ping absolute inline-flex h-full w-full rounded-full bg-red-900 opacity-50;
+}
+
+.notif-base {
+  @apply relative inline-flex right-[-2px] top-[2px] rounded-full h-2 w-2 bg-red-500;
+}
