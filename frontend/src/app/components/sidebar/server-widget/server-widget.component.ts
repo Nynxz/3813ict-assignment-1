@@ -5,7 +5,7 @@ import { RouterLink } from '@angular/router';
 import { ChatService } from '@services/chat/chat.service';
 
 @Component({
-  selector: 'app-server-widget',
+  selector: 'sidebar-server-widget',
   standalone: true,
   imports: [NgIf, RouterLink],
   templateUrl: './server-widget.component.html',
