@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-
+/**
+ * NOT USED - TESTED EVENTEMITTERS
+ */
 @Component({
   selector: 'x-button',
   standalone: true,
