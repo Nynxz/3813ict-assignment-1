@@ -4,9 +4,12 @@
   "compileOnSave": false,
   "compilerOptions": {
     "paths": {
+      "@environments/*": ["./src/environments/*"],
       "@services/*": ["./src/app/services/*"],
       "@routes/*": ["./src/app/routes/*"],
-      "@components/*": ["./src/app/components/*"]
+      "@components/*": ["./src/app/components/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@/*": ["./src/types/*"]
     },
     "outDir": "./dist/out-tsc",
     "strict": true,
