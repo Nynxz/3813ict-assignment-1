@@ -1,12 +1,11 @@
-> [!NOTE] 
-> #### Information
+# Requirements
+> ## Information
 > - **Name**: Henry Lee
 > - **Student Number**: s5238766
 > - **Class**: 3813ICT - Web Application Development
 > - **Due Date**: 5/09/2024 @ 8:00am
 
-> [!WARNING] 
-> #### README Requirements
+> ## README Requirements
 > - [**Git**](#git): Describe the organization of your Git repository and how you used it during the
 > development of your solution (branching, update frequency, server/frontend etc.)
 > - [**Data Structures**](#data-structures): Description of data structures used in both the client and server sides to represent the
@@ -18,9 +17,8 @@
 > data on server side will be changed and how the display of each angular component
 > page will be updated.
 
-### Overview
->[!TIP] 
-> #### Key Dependencies 
+## Overview
+> ### Key Dependencies 
 > #### [v2 Frontend](https://github.com/Nynxz/3813ict-assignment-1/tree/v2/frontend)
 > - Using [Angular Version 18](https://angular.dev/overview)
 > - Using [TailwindCSS](https://tailwindcss.com/docs/guides/angular)
@@ -30,7 +28,7 @@
 > - Using [MongoDB](https://www.mongodb.com/)
 > - Using [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
 
-### Git
+## Git
 Initial project was created in `main branch`. Became a mess as I learnt new things about Angular, decided to create `v2 branch` which is a recreation of the main branch. 
 Both the Angular Frontend and the Express Backend are contained within a single repository
 Initial project was created in `main branch`. Became a mess as I learnt new things about Angular, decided to create `v2 branch` which is a recreation of the main branch. 
@@ -56,7 +54,7 @@ I will be using [Conventional Commits](https://www.conventionalcommits.org/en/v1
 - seperated via `(backend)` vs `(frontend)` tags
 - eg: `feat(frontend): add user page and route` or `docs(backend):add comments to /login route`
 
-### Data Structures
+## Data Structures
 
 User
   - _id: uuid
@@ -85,48 +83,138 @@ Message
   - User*
   - Channel*
   - SentAt: time
-### Angular Architecture
 
-- **Services**
-  - Storage Service?
-    - Used for storing cookies etc?
-  - User Service
-    - Manages the currently logged in user
+## Angular Architecture
+### Routes
+  - **Home** `/`
+    - Welcome Page - Non Functional
+  - **Login** `/login`
+    - Displays the Login and Register Form
+    - Successful login routes to /user
+  - **User** `/user`
+    - Displays 'dashboards' based on roles
+    - User Dashboard (Not Implemented)
+      - Change username, profile picture
+    - Super Dashboard (Functional)
+      - Promote Users
+      - Remove Users
+    -  Admin Dashboard (Functional)
+      - Create Groups
+      - Update Groups
+      - Delete Groups
+  - **Chat** `/chat`
+    - Displays a selectable 'channel sidebar'
+    - When a channel is selected it displays the Chat
+    - Sidebar has a button for displaying group settings
+    - Allows admins to create, update & delete channels
+  - All routes will contain the sidebar, this is used for navigating through the site. Routes are managed through the [`<router-outlet>`](https://angular.dev/api/router/RouterOutlet?tab=api) component and displayed in the main portion of the screen
+
+### Services
+  - **Preferences Service**
+    - Used for storing persistent state (cookies)
+    - Currently used for retrieving jwt and whether sidebar is folded
+  - **User Service**
+    - Used for logging in/registering
+    - Manages JWT, auto logging in
     - Communicates with the backend to verify credentials and save JWT
-  - Chat Service
+  - **Group Service**
+    - Used for creating/updating groups & channels
+  - **Chat Service**
     - Used for managing the chat
     - Sending/deleting messages
-  
-- **Components**
+  - **Admin Service**
+    - Used for admin/super functions
+    - Promoting users 
+    - Creating/updating groups
+
+### Components
   - Sidebar
     - Allow the user to view all Groups they have joined
     - Allow the user to see if they are logged in
     - Allow the user to navigate between user settings (Super/Admin Panel) and chats
 
-- **Routes**
-  - All routes will contain the sidebar, this is used for navigating through the site. Routes are managed through the [`<router-outlet>`](https://angular.dev/api/router/RouterOutlet?tab=api) component and displayed in the main portion of the screen
-  - Home `/`
-    - Welcome Page
-  - User `/user`
-    - Displays 'dashboards' based on roles
-    - User Dashboard
-      - Change username, profile picture
-    - Super Dashboard
-      - Promote Users
-      - Remove Users
-      - Add Users
-  - Login `/login`
-  - Chat `/chat`
 
-- **Guards**
+
+### Guards
   - IsLoggedIn
     - Blocks routing unless the user is logged in
     - Redirects to `/login`
     - Used On `/user` and `/chat`
-### Express
-### Routes
-### Interaction
-### REST API
+
+# Express
+I have created a simple 'framework' for managing my backend routes which uses express. 
+### Concept
+#### Core `Gateway` class
+  - Setups Express and global middleware
+  - Connects mongoose to MongoDB instance
+  - Automatically loads `routes` directory
+#### `registerHTTP` wrapper
+  - assigns callbacks to router methods (get, post)
+  - handles middleware chain
+  - runs 'endware' at the end of the request
+    - Currently logs the response and whether it was successful
+    - eg `[DEBUG]: 200 POST /channel/messages     @ Wed Sep 04 2024 4:58:14 am`\
+
+Route files are placed in the directory `routes`. 
+These files export a default anonymous function which calls the `registerHTTP` wrapper functions.
+The `registerHTTP` function wraps the different express methods (get, post, etc).
+It also takes in an array of optional middleware which can be assigned to each route
+
+#### Example
+
+```js
+export default (router: Router, gateway: Gateway) => {
+  registerHTTP(
+    "get",
+    "/hello",
+    router,
+    async (req: Request, res: Response) => {
+      res.send(`Hello ${req.body.name}`);
+    },
+    [requireBodyKey("name")]
+  );
+};
+```
+```
+> curl localhost:3010/hello
+{"error":"Cannot find name"}
+
+> curl --header "Content-Type: application/json" --request GET --data '{"name": "Henry"}' localhost:3010/hello 
+Hello Henry
+```
+
+### Examples of middleware currently
+  - **requireBodyKey**
+    - requires the request body contains a specified key
+  - **requireObjectHasKeys**
+    - requires the request body contains an object with a specified name
+    - and that the object, has all the specified keys
+  - **requireValidRole**
+    - requires the request contains JSON key 'jwt' which has been encoded with a secret, and contains the required Role (ADMIN, SUPER, USER)
+Currently these middlewares can be used together to validate request bodies and authorize users
+#### **Example**
+```ts
+[
+requireValidRole(Roles.USER),
+requireObjectHasKeys("message", ["content", "channel"]),
+]
+  ```
+A request which contains above, must recieve a payload like below.
+```json
+{
+  jwt: "<JWT which contains the role USER>",
+  message: {
+    content: "",
+    channel: ""
+  }
+}
+```
+
+## Middleware
+
+# Routes
+# Interaction
+# REST API
 
 - **ROUTER /user**
   - POST /login
@@ -148,10 +236,11 @@ Message
   - PUT /message
     - Updates a chat message
 
+# NOT REQUIRED
 ### Express
 ### Routes
 ### Interaction
-### REST API
+### REST API not required?
 
 - **ROUTER /user**
   - POST /login
