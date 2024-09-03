@@ -183,7 +183,7 @@ export default (router: Router, gateway: Gateway) => {
 Hello Henry
 ```
 
-### Examples of middleware currently
+### Examples of Middleware
   - **requireBodyKey**
     - requires the request body contains a specified key
   - **requireObjectHasKeys**
@@ -210,9 +210,76 @@ A request which contains above, must recieve a payload like below.
 }
 ```
 
-## Middleware
-
 # Routes
+#### Users
+- `(POST) /user/create`
+  - `requireObjectHasKeys("user", ["username", "email", "password"])`
+  - User Registration
+  - Returns JWT
+- `(POST) /user/login`
+  - `requireObjectHasKeys("user", ["username", "password"])`
+  - User Login
+  - Returns JWT
+- `(POST) /users/all`
+  - `requireValidRole(Roles.SUPER)`
+  - Gets all users of the app
+  - Returns array of all users
+- `(POST) /user/update`
+  - NOT IMPLEMENTED
+- `(POST) /user/delete`
+  - NOT IMPLEMENTED
+
+#### Groups
+- `(POST) /groups`
+  - `requireValidRole(Roles.USER)`
+  - Gets Groups for specific user
+  - If SUPER role, gets all groups of app
+  - If not, gets all groups user is ADMIN / USER of
+  - Returns array of Groups
+- `(POST) /groups/create`
+  - `requireValidRole(Roles.ADMIN)`
+  - Creates a new group if user is an ADMIN
+- `(POST) /groups/update`
+  - `requireValidRole(Roles.SUPER)`
+  - TODO: allow admins to update
+  - TODO: validate request body
+  - Updates a group
+- `(POST) /groups/users`
+  - Gets all the users of a specific group
+  - TODO: add validation (user of group, admin or super)
+- `(POST) /message/send`
+  - `requireValidRole(Roles.USER)`,
+  - `requireObjectHasKeys("message", ["content", "channel"])`
+  - Sends a message to a channel
+
+#### Channels
+- `(POST) /channel/create`
+  - `requireValidRole(Roles.ADMIN)`
+  - Creates a new channel
+- `(POST) /channel/delete`
+  - `requireValidRole(Roles.ADMIN)`
+  - Deletes an existing channel
+- `(POST) /channel/update`
+  - `requireValidRole(Roles.ADMIN)`
+  - Updates an existing channel
+- `(POST) /channel/messages`
+  - Gets all messages of a specific channel
+- `(POST) /channels`
+  - Gets all the channels of a specific group
+  
+#### Admin
+- `(POST) /super/updateuser`
+  - `requireValidRole(Roles.SUPER)`
+  - Updates a user
+  - Used for promoting
+
+#### Testing
+- `(GET) /`
+  - Hello World!
+- `(GET) /ping`
+  - Pong!
+
+
 # Interaction
 # REST API
 
