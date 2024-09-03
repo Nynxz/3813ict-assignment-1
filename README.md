@@ -19,23 +19,20 @@
 
 ## Overview
 > ### Key Dependencies 
-> #### [v2 Frontend](https://github.com/Nynxz/3813ict-assignment-1/tree/v2/frontend)
+> #### [Frontend](https://github.com/Nynxz/3813ict-assignment-1/tree/main/frontend)
 > - Using [Angular Version 18](https://angular.dev/overview)
 > - Using [TailwindCSS](https://tailwindcss.com/docs/guides/angular)
 > - Using [jwt-decode](https://www.npmjs.com/package/jwt-decode)
-> #### [v2 Backend](https://github.com/Nynxz/3813ict-assignment-1/tree/v2/backend)
+> #### [Backend](https://github.com/Nynxz/3813ict-assignment-1/tree/main/backend)
 > - Using [Express](https://expressjs.com/)
 > - Using [MongoDB](https://www.mongodb.com/)
+> - Using [Mongoose](https://mongoosejs.com/)
 > - Using [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
 
 ## Git
 Initial project was created in `main branch`. Became a mess as I learnt new things about Angular, decided to create `v2 branch` which is a recreation of the main branch. 
 Both the Angular Frontend and the Express Backend are contained within a single repository
-Initial project was created in `main branch`. Became a mess as I learnt new things about Angular, decided to create `v2 branch` which is a recreation of the main branch. 
-Both the Angular Frontend and the Express Backend are contained within a single repository
 - https://github.com/Nynxz/3813ict-assignment-1
-
-v1 was contained within `ngfrontend` while the new v2 frontend is contained within the `frontend` directory. The Express backend is contained within the `backend` directory.
 
 v1 was contained within `ngfrontend` while the new v2 frontend is contained within the `frontend` directory. The Express backend is contained within the `backend` directory.
 
@@ -56,33 +53,57 @@ I will be using [Conventional Commits](https://www.conventionalcommits.org/en/v1
 
 ## Data Structures
 
-User
-  - _id: uuid
-  - Username: string
-  - Email: string
-  - Username: string
-  - Roles[]*
-  - Groups[]*
+#### **Role**
+- `Enum (USER, ADMIN, SUPER)`
 
-Group
-  - _id: uuid
-  - Name: string
-  - Channels[]*
-  - Users[]*
-  - Admins[]*
+#### **User**
+Represents a user of the application. 
+- Currently `password` is stored in plaintext
+- `roles` are stored as integers (0, 1, 2 > USER, ADMIN, SUPER)
+```
+- _id: uuid | Unique
+- username: string | Unique
+- email: string
+- password: string
+- imageURL: string
+- roles: Role[]*
+- groups: Group[]*
+```
 
-Channel
-  - _id: uuid
-  - Name: string
-  - Group*
-  - Messages[]*
 
-Message
-  - _id: uuid
-  - Content: string
-  - User*
-  - Channel*
-  - SentAt: time
+#### **Group**
+Represents a group of the application.
+- `users` are those who have access to communicate in the group's channels
+- `admins` are those who have access to create new channels, modify existing channels and add/remove users from the group
+```
+- _id: uuid | Unique
+- name: string
+- imageURL: string
+- users: User[]*
+- admins: User[]*
+- channels: Channel[]*
+```
+
+
+#### **Channel**
+Represents a channel belonging to a group. Created by an ADMIN or SUPER user
+```
+- _id: uuid | Unique
+- name: string
+- group: Group*
+- messages: Messages[]*
+```
+
+
+
+#### **Message**
+Represents a message sent in a channel, from a user.
+```
+- _id: uuid | Unique
+- content: string
+- sender: User*
+- channel: Channel*
+```
 
 ## Angular Architecture
 ### Routes
@@ -141,7 +162,7 @@ Message
     - Redirects to `/login`
     - Used On `/user` and `/chat`
 
-# Express
+## Express
 I have created a simple 'framework' for managing my backend routes which uses express. 
 ### Concept
 #### Core `Gateway` class
@@ -152,8 +173,8 @@ I have created a simple 'framework' for managing my backend routes which uses ex
   - assigns callbacks to router methods (get, post)
   - handles middleware chain
   - runs 'endware' at the end of the request
-    - Currently logs the response and whether it was successful
-    - eg `[DEBUG]: 200 POST /channel/messages     @ Wed Sep 04 2024 4:58:14 am`\
+    - Currently logs the request and whether it was successful
+    - eg `[DEBUG]: 200 POST /channel/messages     @ Wed Sep 04 2024 4:58:14 am`
 
 Route files are placed in the directory `routes`. 
 These files export a default anonymous function which calls the `registerHTTP` wrapper functions.
@@ -184,6 +205,10 @@ Hello Henry
 ```
 
 ### Examples of Middleware
+  - **requireAuthHeader**
+    - requires the request header contains an `Authorization Bearer Token`
+    - `Authorization: Bearer <JWT TOKEN>`
+    - Attaches decoded jwt to `res.locals.user`
   - **requireBodyKey**
     - requires the request body contains a specified key
   - **requireObjectHasKeys**
@@ -210,7 +235,10 @@ A request which contains above, must recieve a payload like below.
 }
 ```
 
-# Routes
+## Routes
+> #### Note
+> Many routes are currently POST instead of GET, due to requiring a JWT token. I am aware I can use headers to supply "an auth bearer token". I am in the process of converting middleware, routes and angular services to use headers instead of the request body. Currently `routes/test.ts`  `GET /jwttest` route has 
+### **Implemented**
 #### Users
 - `(POST) /user/create`
   - `requireObjectHasKeys("user", ["username", "email", "password"])`
@@ -224,10 +252,7 @@ A request which contains above, must recieve a payload like below.
   - `requireValidRole(Roles.SUPER)`
   - Gets all users of the app
   - Returns array of all users
-- `(POST) /user/update`
-  - NOT IMPLEMENTED
-- `(POST) /user/delete`
-  - NOT IMPLEMENTED
+
 
 #### Groups
 - `(POST) /groups`
@@ -271,60 +296,38 @@ A request which contains above, must recieve a payload like below.
 - `(POST) /super/updateuser`
   - `requireValidRole(Roles.SUPER)`
   - Updates a user
-  - Used for promoting
+  - Used for promoting users
 
-#### Testing
-- `(GET) /`
-  - Hello World!
-- `(GET) /ping`
-  - Pong!
+### **Planned**
+#### Channel
+- `(POST) /channel/join`
+  - Establishes a websocket
+  - Allows for live message updates
+#### Users
+- `(POST) /user/update`
+  - Allows a user to update their own name and profile picture
+- `(POST) /user/delete`
+  - Allows a user to delete their own profile
 
+#### Images
+- `(POST) /image/upload`
+  - Allows a user to upload an image
+#### Video Chat
+- `(POST) /video/create`
+  - Creates a websocket connection for users to join a video chat
+- `(POST) /video/join`
+  - Establishes websocket connection to created video chat
 
-# Interaction
-# REST API
+## Interaction
+#### JSON Web Token
+JWT's are used for authorization of backend routes. When the user logs in, the backend returns a JWT which is stored in the clients browser. This is then sent back to the server when the client makes requests which require authorization. The JWT is signed with a secret, this signature is then authenticated to verify the content of the JWT was originally created by the server. As JWT's are just base64 encoded objects, with a signature, they can be easily decoded 'without the password'. Due to this, it is not used to store sensitive information like passwords, but used as more of a 'ticket' to access backend routes. Currently it is used to store the users roles, which is then used by the requiredValidRoles() middleware.
 
-- **ROUTER /user**
-  - POST /login
-    - Checks if username and password is valid in database
-    - Expected Request Payload: `{username: string, password: string}`
-    - Returns: `{jwt: JWT}` - Encoded JWT 
-    - Decoded JWT: `{id: User._id, iat: number, exp:number}`
-  - POST /logout????
+#### 
 
-- **ROUTER /chat**
-  - POST /message
-    - Creates a new chat message
-    - Expected Request Payload: `{content: string, channel: Channel._id, jwt: JWT}`
-    - Requires: JWT Owner to be a User in the Group which contains the Channel
-  - DELETE /message
-    - Deletes a chat message
-    - Expected Request Payload: `{id: Message._id , jwt: JWT}`
-    - Requires: JWT Owner to be message sender, or Admin of the Group where message was sent
-  - PUT /message
-    - Updates a chat message
-
-# NOT REQUIRED
-### Express
-### Routes
-### Interaction
-### REST API not required?
-
-- **ROUTER /user**
-  - POST /login
-    - Checks if username and password is valid in database
-    - Expected Request Payload: `{username: string, password: string}`
-    - Returns: `{jwt: JWT}` - Encoded JWT 
-    - Decoded JWT: `{id: User._id, iat: number, exp:number}`
-  - POST /logout????
-
-- **ROUTER /chat**
-  - POST /message
-    - Creates a new chat message
-    - Expected Request Payload: `{content: string, channel: Channel._id, jwt: JWT}`
-    - Requires: JWT Owner to be a User in the Group which contains the Channel
-  - DELETE /message
-    - Deletes a chat message
-    - Expected Request Payload: `{id: Message._id , jwt: JWT}`
-    - Requires: JWT Owner to be message sender, or Admin of the Group where message was sent
-  - PUT /message
-    - Updates a chat message
+#### Client <> Server
+- Frontend contains various services to organise different client to server functions
+- Services contain state, typically as a [Signal](https://angular.dev/guide/signals)
+- Signals allow for components to 'subscribe' to state changes and react
+- This allows for a single source of truth components can use
+- Services inject and use the [HttpClient](https://angular.dev/api/common/http/HttpClient) class to send requests to the backend.
+- 
