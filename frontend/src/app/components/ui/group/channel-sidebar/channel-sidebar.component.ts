@@ -1,6 +1,12 @@
-import { Component, computed, Input } from '@angular/core';
+import {
+  Component,
+  computed,
+  Input,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { ChannelWidgetComponent } from '../channel-widget/channel-widget.component';
-import { Group } from '@services/group/group.service';
+import { GroupService } from '@services/group/group.service';
 import { ChatService } from '@services/chat/chat.service';
 
 @Component({
@@ -11,8 +17,33 @@ import { ChatService } from '@services/chat/chat.service';
   styleUrl: './channel-sidebar.component.css',
 })
 export class ChannelSidebarComponent {
-  // @Input()
-  // server: Group | undefined;
-  server = computed(() => this.chatService.selectedGroup());
-  constructor(private chatService: ChatService) {}
+  group = computed(() => this.chatService.selectedGroup());
+  channels = computed(() => this.chatService.channels());
+  selected = computed(() => this.chatService.selectedChannel() || { _id: '' });
+
+  @Input()
+  goToGroupHomeBind: WritableSignal<boolean> = signal(false);
+
+  constructor(
+    private chatService: ChatService,
+    private groupService: GroupService
+  ) {}
+
+  goToGroupSettings() {
+    this.goToGroupHome();
+    this.goToGroupHomeBind.set(true);
+  }
+
+  goToGroupHome() {
+    this.goToGroupHomeBind.set(false);
+    this.chatService.selectChannel(undefined);
+  }
+
+  // createChannel() {
+  //   console.log(this.group());
+  //   this.groupService.createChannel({
+  //     name: 'test',
+  //     group: this.group()!._id,
+  //   });
+  // }
 }

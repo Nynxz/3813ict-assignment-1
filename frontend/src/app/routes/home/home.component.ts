@@ -5,8 +5,9 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  styleUrl: './home.component.css',
+  host: {
+    class: 'w-full h-full bg-primary_400 overflow-hidden flex flex-grow',
+  },
 })
-export class HomeComponent {
-
-}
+export class HomeComponent {}

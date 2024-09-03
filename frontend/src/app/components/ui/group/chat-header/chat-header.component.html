@@ -1,0 +1,23 @@
+<div class="flex flex-grow">
+  <div class="pl-2 flex flex-grow bg-primary_100 rounded-md justify-between">
+    <div>Channel: {{ selectedChannel?.name }} {{ selectedChannel?._id }}</div>
+  </div>
+
+  <button
+    class="bg-purple-200 px-2 rounded-lg ml-2 hover:bg-primary_300 flex flex-row"
+  >
+    <span class="my-auto"> Call </span>
+    <img
+      src="phone-svgrepo-com.svg"
+      alt="svg phone"
+      class="h-6 p-[2px] pt-1 pr-0 select-none"
+    />
+  </button>
+  <button
+    class="bg-purple-200 px-2 rounded-lg ml-2 hover:bg-primary_300 flex flex-row"
+    (click)="openSettingsF()"
+  >
+    <span class="my-auto"> Settings </span>
+    <img src="cog-svgrepo-com.svg" alt="svg cog" class="pl-1 h-6 select-none" />
+  </button>
+</div>

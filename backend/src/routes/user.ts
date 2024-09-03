@@ -1,21 +1,27 @@
 import { Router } from "express";
-import { Gateway, GRouter } from "../gateway";
+import { Gateway } from "../gateway";
 import { registerHTTP } from "../lib/registerHTTP";
 import requireValidRole from "../middleware/requireValidRole";
 import { Logger } from "../lib/logger";
 import { generateUserJWT } from "../lib/jwt";
-import { createUser, findUser, Roles, User } from "../db/user";
+import { createUser, findUser, getAllUsers, Roles, User } from "../db/user";
 import requireBodyKey from "../middleware/requireBodyKey";
 import requireObjectHasKeys from "../middleware/requireObjectHasKeys";
 
-export default (router: GRouter, gateway: Gateway) => {
+export default (router: Router, gateway: Gateway) => {
   registerHTTP(
     "post",
     "/user/create",
     router,
     async (req, res) => {
-      const user = await createUser(gateway.db!, req.body.user);
-      res.send(user);
+      const user = await createUser(req.body.user);
+      if (user) {
+        res.send({
+          jwt: generateUserJWT(user as Partial<User>),
+        });
+      } else {
+        res.status(401).send({ error: "User Exists" });
+      }
     },
     [requireObjectHasKeys("user", ["username", "email", "password"])]
   );
@@ -25,7 +31,7 @@ export default (router: GRouter, gateway: Gateway) => {
     "/user/login",
     router,
     async (req, res) => {
-      const user = await findUser(gateway.db!, req.body.user);
+      const user = await findUser(req.body.user);
       if (user) {
         res.send({
           jwt: generateUserJWT(user as Partial<User>),
@@ -34,7 +40,18 @@ export default (router: GRouter, gateway: Gateway) => {
         res.status(401).send({ error: "Invalid Login" });
       }
     },
-    [requireObjectHasKeys("user", ["email", "password"])]
+    [requireObjectHasKeys("user", ["username", "password"])]
+  );
+
+  registerHTTP(
+    "post",
+    "/users/all",
+    router,
+    async (req, res) => {
+      const users = await getAllUsers();
+      res.send(users);
+    },
+    [requireValidRole(Roles.SUPER)]
   );
 
   registerHTTP("post", "/user/update", router, (req, res) => {});

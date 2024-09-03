@@ -1,5 +1,5 @@
 .outer-div {
-  @apply relative flex flex-row rounded-md border-black border-[1px] mt-2;
+  @apply relative flex flex-row rounded-md border-black border-[1px] mt-2 hover:bg-primary_400 hover:border-primary_accent;
 }
 
 .notif-outer-span {

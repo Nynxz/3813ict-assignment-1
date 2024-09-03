@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { AdminPanelComponent } from '@components/ui/user/admin-panel/admin-panel.component';
 import { SuperPanelComponent } from '@components/ui/user/super-panel/super-panel.component';
 import { UserService } from '@services/user/user.service';
+import { SuperSettingsComponent } from '../../components/ui/user/super-settings/super-settings.component';
 
 enum Roles {
   'USER',
@@ -12,11 +13,16 @@ enum Roles {
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [NgClass, AdminPanelComponent, SuperPanelComponent],
+  imports: [
+    NgClass,
+    AdminPanelComponent,
+    SuperPanelComponent,
+    SuperSettingsComponent,
+  ],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css',
   host: {
-    class: 'w-full h-full bg-gray-500 overflow-hidden',
+    class: 'w-full h-full bg-primary_400 overflow-hidden flex flex-grow',
   },
 })
 export class UserComponent implements OnInit {
@@ -32,7 +38,7 @@ export class UserComponent implements OnInit {
   //   "SUPER", 2
   // }
   ngOnInit(): void {
-    this.tabs = this.userService.user().roles as number[];
+    this.tabs = this.userService.user()?.roles as number[];
     this.tabs?.forEach((e) => {
       switch (e) {
         case Roles.ADMIN:

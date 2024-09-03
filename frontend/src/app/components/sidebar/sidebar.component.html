@@ -1,17 +1,30 @@
-<div [ngClass]="folded() ? 'navbar-main-unfolded ' : 'navbar-main-folded'">
+<div
+  [ngClass]="folded() ? 'navbar-main-unfolded ' : 'navbar-main-folded'"
+  class="select-none"
+>
   <div class="flex flex-col">
-    <button class="navbar-home-unfolded" routerLink="/">
+    <button
+      class="navbar-home-unfolded"
+      routerLink="/"
+      (click)="selectGroup(undefined)"
+    >
       <img src="house-svgrepo-com.svg" alt="svg arrow" class="home-icon" />
       @if(folded()){
       <div class="navbar-hometitle-unfolded">Bicker</div>
       }
     </button>
     @for (server of servers(); track $index) {
-    <sidebar-server-widget [folded]="folded()" [server]="server" />
+    <sidebar-server-widget
+      class="select-none"
+      (clickEvent)="selectGroup(server)"
+      [folded]="folded()"
+      [server]="server"
+      [selected]="selectedGroup() == server"
+    />
     }
   </div>
   <div class="flex flex-col">
-    <sidebar-login-button [folded]="folded" />
+    <sidebar-login-button [folded]="folded" (click)="selectGroup(undefined)" />
     <sidebar-fold-button [folded]="folded" (clickEvent)="fold()" />
   </div>
 </div>

@@ -1,3 +1,21 @@
-<div class="m-auto">
-  <login-form />
+<div class="flex flex-grow justify-center pt-20">
+  <div class="">
+    <div class="pl-2">
+      <span
+        class="bg-white rounded-t-md px-2 mr-1"
+        (click)="isRegistering = false"
+        >Login</span
+      >
+      <span class="bg-white rounded-t-md px-2" (click)="isRegistering = true"
+        >Register</span
+      >
+    </div>
+    <div class="mt-[-1px]">
+      @if(isRegistering){
+      <register-form />
+      } @else{
+      <login-form />
+      }
+    </div>
+  </div>
 </div>

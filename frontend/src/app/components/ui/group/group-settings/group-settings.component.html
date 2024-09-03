@@ -1,0 +1,212 @@
+<div
+  class="flex flex-grow flex-col bg-primary_300 justify-center m-2 rounded-md p-2"
+>
+  <div class="text-4xl underline font-bold">Group Settings</div>
+
+  <div class="flex flex-grow bg-primary_100 rounded-md p-2 mt-2">
+    <div class="grid grid-cols-3 grid-rows-10 w-full max-h-full gap-2">
+      <div
+        class="col-span-1 row-span-1 grid grid-rows-3 bg-primary_200 rounded-md border-black border-[1px]"
+      >
+        <span class="font-bold text-xl px-2"> Stats </span>
+      </div>
+      <div
+        class="col-span-2 row-span-1 grid grid-rows-3 bg-primary_200 rounded-md border-black border-[1px]"
+      >
+        <span class="font-bold text-xl px-2"> Stats </span>
+      </div>
+      <!-- SELECTOR  -->
+      <div class="col-span-1 row-span-4 flex flex-col">
+        <div class="pl-2 flex flex-row gap-1">
+          <div
+            class="bg-white rounded-t-md w-fit flex-shrink px-1 hover:cursor-pointer select-none"
+            (click)="selectedTab = 0"
+            [ngClass]="
+              selectedTab == 0
+                ? 'bg-primary_300'
+                : 'bg-primary_200 hover:bg-primary_400'
+            "
+          >
+            Channels
+          </div>
+          <div
+            class="bg-white rounded-t-md w-fit flex-shrink px-1 hover:cursor-pointer select-none"
+            (click)="selectedTab = 1"
+            [ngClass]="
+              selectedTab == 1
+                ? 'bg-primary_300'
+                : 'bg-primary_200 hover:bg-primary_400'
+            "
+          >
+            Users
+          </div>
+          <div
+            class="bg-white rounded-t-md w-fit flex-shrink px-1 hover:cursor-pointer select-none"
+            (click)="selectedTab = 2"
+            [ngClass]="
+              selectedTab == 2
+                ? 'bg-primary_300'
+                : 'bg-primary_200 hover:bg-primary_400'
+            "
+          >
+            Admins
+          </div>
+        </div>
+        <div
+          *ngIf="selectedTab == 0"
+          class="bg-primary_200 rounded-md border-black border-[1px] overflow-auto flex flex-grow flex-col h-0"
+        >
+          <div class="flex justify-between p-2">
+            <span class="font-bold"> Channels </span>
+            <span
+              class="font-bold bg-primary_300 rounded-md px-2 hover:cursor-pointer hover:bg-primary_400"
+              (click)="createChannel()"
+            >
+              Create
+            </span>
+          </div>
+          <div
+            class="overflow-auto flex flex-grow flex-col h-0 border-t-[1px] border-black"
+          >
+            <ul class="flex flex-col gap-1 p-2">
+              @for (channel of channels(); track $index) {
+              <li
+                class="rounded-md pl-1 hover:cursor-pointer hover:bg-primary_400"
+                (click)="setConfigChannel(channel)"
+                [ngClass]="
+                  configChannel()?._id == channel._id
+                    ? 'bg-primary_accent'
+                    : 'bg-primary_300'
+                "
+              >
+                {{ channel.name }}
+              </li>
+              }
+            </ul>
+          </div>
+        </div>
+
+        <div
+          *ngIf="selectedTab == 1"
+          class="bg-primary_200 rounded-md border-black border-[1px] overflow-auto flex flex-grow flex-col h-0"
+        >
+          <div class="flex justify-between p-2">
+            <span class="font-bold"> Users </span>
+            <span
+              class="font-bold bg-primary_300 rounded-md px-2 hover:cursor-pointer hover:bg-primary_400"
+            >
+              Add
+            </span>
+          </div>
+          <div
+            class="overflow-auto flex flex-grow flex-col h-0 border-t-[1px] border-black"
+          >
+            <ul class="flex flex-col gap-1 p-2">
+              @for (user of users(); track $index) {
+              <li
+                class="rounded-md pl-1 hover:cursor-pointer hover:bg-primary_400"
+                (click)="setConfigUser(user)"
+                [ngClass]="
+                  configUser() == user ? 'bg-primary_accent' : 'bg-primary_300'
+                "
+              >
+                {{ user.username }}
+              </li>
+              }
+            </ul>
+          </div>
+        </div>
+
+        <div
+          *ngIf="selectedTab == 2"
+          class="bg-primary_200 rounded-md border-black border-[1px] p-2 overflow-auto flex flex-grow flex-col h-0"
+        >
+          <div class="flex justify-between pb-1">
+            <span class="font-bold"> Admins </span>
+            <span
+              class="font-bold bg-primary_300 rounded-md px-2 hover:cursor-pointer hover:bg-primary_400"
+            >
+              Add
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="col-span-2 row-span-4 flex flex-col bg-primary_200 rounded-md border-black border-[1px]"
+      >
+        <div *ngIf="selectedTab == 0">
+          <div
+            class="flex flex-row flex-shrink justify-between border-b-[1px] border-black"
+          >
+            <span class="font-bold text-xl underline p-2">Edit Channel</span>
+            <span
+              class="font-bold bg-primary_300 rounded-md px-2 mr-2 hover:cursor-pointer hover:bg-primary_400 max-h-min my-auto"
+              (click)="saveChannelConfig()"
+            >
+              Save
+            </span>
+          </div>
+          <div class="p-2" *ngIf="configChannel()">
+            <ul>
+              <li>Channel ID: {{ configChannel()?._id }}</li>
+              <li>
+                Channel Name:
+                <input
+                  class="rounded-md"
+                  type="text"
+                  [(ngModel)]="channelName"
+                />
+              </li>
+              <li></li>
+              <li></li>
+            </ul>
+          </div>
+        </div>
+        <div *ngIf="selectedTab == 1" class="flex flex-grow flex-col">
+          <div
+            class="flex flex-row flex-shrink justify-between border-b-[1px] border-black"
+          >
+            <span class="font-bold text-xl underline p-2">Edit User</span>
+            <span
+              class="font-bold bg-primary_300 rounded-md px-2 mr-2 hover:cursor-pointer hover:bg-primary_400 max-h-min my-auto"
+            >
+              Save
+            </span>
+          </div>
+          <div
+            *ngIf="configUser()"
+            class="flex flex-row justify-between flex-grow"
+          >
+            <div class="p-2">
+              <ul>
+                <li>Username: {{ configUser()?.username }}</li>
+                <li>Group Admin: false</li>
+                <li>Super User: {{ configUser()?.roles?.includes(2) }}</li>
+                <li></li>
+              </ul>
+            </div>
+            <div class="p-2 border-black border-[1px] rounded-md m-4">
+              <ul>
+                <li>
+                  <span
+                    class="font-bold bg-primary_300 rounded-md px-2 mr-2 hover:cursor-pointer hover:bg-primary_400 max-h-min my-auto"
+                  >
+                    Promote to Group Admin
+                  </span>
+                </li>
+                <li>
+                  <span
+                    class="font-bold bg-primary_300 rounded-md px-2 mr-2 hover:cursor-pointer hover:bg-primary_400 max-h-min my-auto"
+                  >
+                    Kick User
+                  </span>
+                </li>
+                <li></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

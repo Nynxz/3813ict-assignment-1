@@ -1,24 +1,26 @@
-import { Component, Input } from '@angular/core';
+import { Channel } from '../../../../../types/channel.type';
+import { NgClass } from '@angular/common';
+import { Component, computed, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ChatService } from '@services/chat/chat.service';
 
 @Component({
   selector: 'group-channel-widget',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, NgClass],
   templateUrl: './channel-widget.component.html',
   styleUrl: './channel-widget.component.css',
 })
 export class ChannelWidgetComponent {
   @Input()
-  channelID: number | undefined;
-  @Input()
-  serverID: string | undefined;
+  channel: Channel | undefined | any;
 
+  @Input()
+  selected = false;
   constructor(private chatService: ChatService) {}
 
-  setChannel(channelID: number) {
+  setChannel(channelID: string) {
     console.log('set channel', channelID);
-    this.chatService.selectChannel(channelID);
+    this.chatService.selectChannel(this.channel);
   }
 }

@@ -1,19 +1,33 @@
-<div class="flex flex-grow bg-gray-500">
-  <group-channel-sidebar />
+<div class="flex flex-grow bg-primary_400">
+  <!-- SIDEBAR -->
+  <group-channel-sidebar [goToGroupHomeBind]="openSettings" />
   @if (selectedChannel()) {
+  <!-- CHANNEL CHAT -->
   <div class="flex flex-grow flex-col">
-    <div class="m-2 mb-0 rounded-md border-black border-[1px] font-bold">
-      Channel Name {{ selectedChannel() }}
+    <div class="m-2 mb-0 rounded-md font-bold">
+      <group-chat-header
+        [openSettings]="openSettings"
+        [selectedChannel]="selectedChannel()"
+      />
     </div>
     <group-chat-panel />
+    @if(openSettings()){
+    <!-- CHANNEL SETTINGS POPUP  -->
+    <!-- only available while channel is selected -->
+    <group-channel-settings-popup [openSettings]="openSettings" />
+    }
   </div>
+  } @else { @if(openSettings()){
+  <!-- GROUP SETTINGS -->
+  <group-settings />
   } @else {
+  <!-- HOME -->
   <div class="flex flex-grow flex-col">
     <div
       class="font-bold underline text-3xl flex w-full text-center align-middle justify-center min-w-max"
     >
-      Welcome to {{ selectedGroup()?.groupName }}!
+      Welcome to {{ selectedGroup()?.name }}!
     </div>
   </div>
-  }
+  } }
 </div>

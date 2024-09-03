@@ -1,12 +1,10 @@
 <div class="flex flex-row mb-2 flex-grow">
-  @if (fromUser) {
+  @if (message.sender == userId()) {
   <div class="flex flex-grow">
     <div
       class="flex w-3/4 ms-auto bg-gray-200 my-auto border-black rounded-md border-[1px] px-2 py-1 rounded-tr-none"
     >
-      Hello Fren this is a super long message aboout absolutely nothing
-      important what soever so i am glad you read this long and i hope the
-      styling works properly!
+      {{ message.content }}
     </div>
   </div>
   <img
@@ -23,9 +21,7 @@
   <div
     class="flex w-3/4 justify-start bg-gray-100 my-auto border-black rounded-md border-[1px] px-2 py-1 rounded-tl-none"
   >
-    Hello Fren this is a super long message aboout absolutely nothing important
-    what soever so i am glad you read this long and i hope the styling works
-    properly!
+    {{ message.content }}
   </div>
   }
 </div>

@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { MessagesenderWidgetComponent } from '../messagesender-widget/messagesender-widget.component';
 import { ChatMessageComponent } from '../chat-message/chat-message.component';
+import { ChatService } from '@services/chat/chat.service';
 
 @Component({
   selector: 'group-chat-panel',
@@ -9,7 +10,10 @@ import { ChatMessageComponent } from '../chat-message/chat-message.component';
   templateUrl: './chat-panel.component.html',
   styleUrl: './chat-panel.component.css',
   host: {
-    class: 'w-full h-full bg-gray-500 overflow-hidden flex flex-grow',
+    class: 'w-full h-full bg-primary_400 overflow-hidden flex flex-grow',
   },
 })
-export class ChatPanelComponent {}
+export class ChatPanelComponent {
+  messages = computed(() => this.chatService.messages());
+  constructor(private chatService: ChatService) {}
+}

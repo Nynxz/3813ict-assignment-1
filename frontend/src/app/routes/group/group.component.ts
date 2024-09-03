@@ -1,8 +1,10 @@
+import { Group } from '../../../types/group.type';
 import {
   Component,
   computed,
   Input,
   OnChanges,
+  signal,
   SimpleChanges,
 } from '@angular/core';
 
@@ -11,8 +13,11 @@ import { ChannelSidebarComponent } from '@components/ui/group/channel-sidebar/ch
 import { ChannelWidgetComponent } from '@components/ui/group/channel-widget/channel-widget.component';
 import { ChatPanelComponent } from '@components/ui/group/chat-panel/chat-panel.component';
 import { ChatService } from '@services/chat/chat.service';
-import { Group, GroupService } from '@services/group/group.service';
+import { GroupService } from '@services/group/group.service';
 import { Observable } from 'rxjs';
+import { ChatHeaderComponent } from '../../components/ui/group/chat-header/chat-header.component';
+import { ChannelSettingsPopupComponent } from '../../components/ui/group/channel-settings-popup/channel-settings-popup.component';
+import { GroupSettingsComponent } from '../../components/ui/group/group-settings/group-settings.component';
 
 @Component({
   selector: 'app-group',
@@ -21,33 +26,28 @@ import { Observable } from 'rxjs';
     ChannelWidgetComponent,
     ChannelSidebarComponent,
     ChatPanelComponent,
+    ChatHeaderComponent,
+    ChannelSettingsPopupComponent,
+    GroupSettingsComponent,
   ],
   templateUrl: './group.component.html',
   styleUrl: './group.component.css',
   host: {
-    class: 'w-full h-full bg-gray-500 overflow-hidden flex flex-grow',
+    class: 'w-full h-full bg-primary flex flex-grow',
   },
 })
-export class GroupComponent implements OnChanges {
+export class GroupComponent {
   @Input()
   id = '';
 
-  @Input()
-  channel = '';
   server: Group | undefined;
 
-  // selected = computed(() => {
-  //   return (
-  //     ' ' +
-  //     JSON.stringify(this.chatService.selectedChannel()) +
-  //     ' ' +
-  //     JSON.stringify(this.chatService.selectedGroup())
-  //   );
-  // });
+  openSettings = signal(false);
 
   selectedGroup = computed(() => {
     return this.chatService.selectedGroup();
   });
+
   selectedChannel = computed(() => {
     return this.chatService.selectedChannel();
   });
@@ -61,15 +61,7 @@ export class GroupComponent implements OnChanges {
       this.server = e.find((a) => a._id == this.id);
     });
     if (!this.selectedGroup()) {
-      console.log('NO GROUP?');
       this.router.navigateByUrl('/');
     }
-  }
-
-  ngOnChanges() {
-    console.log(`Get Content - Channel:${this.channel}[Server:${this.id}]`);
-    this.groupService.getGroups().subscribe((e) => {
-      this.server = e.find((a) => a._id == this.id);
-    });
   }
 }

@@ -1,12 +1,12 @@
 <div
-  class="flex flex-grow flex-row justify-between hover:cursor-pointer hover:bg-gray-400 hover:bg-opacity-50"
+  class="flex flex-grow flex-row justify-between hover:cursor-pointer hover:bg-primary_200 hover:bg-opacity-50"
   (click)="fold()"
-  [ngClass]="selected ? 'bg-gray-400' : ''"
+  [ngClass]="selected ? 'bg-primary_200' : 'bg-primary_400'"
 >
   <div class="flex flex-grow flex-row">
     <img [src]="server.imageURL" class="w-8 mr-2 select-none" />
     <span class="font-semibold select-none truncate max-h-8">
-      {{ server.groupName }}
+      {{ server.name }}
     </span>
   </div>
   <img src="cog-svgrepo-com.svg" alt="svg arrow" class="h-8 select-none" />

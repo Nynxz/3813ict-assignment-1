@@ -1,11 +1,11 @@
 import { Request, Response, Router } from "express";
 import { registerHTTP } from "../lib/registerHTTP";
-import { Gateway, GRouter } from "../gateway";
+import { Gateway } from "../gateway";
 import requireValidRole from "../middleware/requireValidRole";
 import requireBodyKey from "../middleware/requireBodyKey";
 import { Roles } from "../db/user";
 
-export default (router: GRouter, gateway: Gateway) => {
+export default (router: Router, gateway: Gateway) => {
   registerHTTP("get", "/", router, (req, res) => {
     res.send("Connected to Backend");
   });

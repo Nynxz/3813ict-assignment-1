@@ -9,7 +9,7 @@
       class="flex flex-col p-2 rounded-md border-[1px] border-black border-solid m-4 gap-1 max-h-72 min-h-max h-max overflow-auto w-1/4"
     >
       <li
-        class="border-black border-[1px] rounded-md hover:cursor-pointer hover:bg-gray-600"
+        class="border-black border-[1px] rounded-md hover:cursor-pointer hover:bg-primary_200"
         (click)="newGroup()"
       >
         Create Server
@@ -19,7 +19,7 @@
         class="border-black border-solid border-[1px] flex flex-grow flex-col"
       >
         <user-super-server-widget
-          [selected]="selectGroup == group"
+          [selected]="selectedGroup._id == group._id"
           [server]="group"
           (click)="selectGroup(group)"
         ></user-super-server-widget>

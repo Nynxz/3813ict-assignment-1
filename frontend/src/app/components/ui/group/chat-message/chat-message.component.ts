@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, computed, Input } from '@angular/core';
+import { UserService } from '@services/user/user.service';
 
 @Component({
   selector: 'group-chat-message',
@@ -9,4 +10,7 @@ import { Component, Input } from '@angular/core';
 })
 export class ChatMessageComponent {
   @Input() fromUser = false;
+  @Input() message = undefined as any;
+  userId = computed(() => this.userService.user()?._id);
+  constructor(private userService: UserService) {}
 }

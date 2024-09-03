@@ -1,0 +1,44 @@
+<div class="outer-div">
+  <div class="inner-div">
+    <div class="font-bold underline text-xl">Register</div>
+    <form (ngSubmit)="handleRegister()">
+      <ul>
+        <li>
+          <label for="username">
+            Username
+            <input
+              type="text"
+              name="username"
+              class="input"
+              [(ngModel)]="username"
+            />
+          </label>
+        </li>
+        <li>
+          <label for="email">
+            Email
+            <input type="text" name="email" class="input" [(ngModel)]="email" />
+          </label>
+        </li>
+        <li>
+          <label for="password">
+            Password
+            <input
+              type="password"
+              name="password"
+              class="input"
+              [(ngModel)]="password"
+            />
+          </label>
+        </li>
+        <li>
+          <input type="submit" class="input submit-button" />
+        </li>
+      </ul>
+    </form>
+  </div>
+  <div class="text-center">
+    <p *ngIf="Error.enabled" class="error">Error: {{ Error.text }}</p>
+    <div *ngIf="!Error.enabled" class="h-11"></div>
+  </div>
+</div>

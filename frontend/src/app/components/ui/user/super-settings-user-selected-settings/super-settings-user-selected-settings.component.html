@@ -1,0 +1,41 @@
+<span class="font-bold text-xl px-2 border-b-[1px] border-black">
+  Selected User
+</span>
+<div *ngIf="selectedUser" class="p-2 flex flex-grow flex-col">
+  <span class="font-bold"> Name: {{ selectedUser.username }} </span>
+  <span class="font-bold"> Roles: {{ roles }} </span>
+  <ul
+    class="bg-primary_200 rounded-md p-2 flex-grow h-full border-[1px] border-black"
+  >
+    <li
+      class="select-none bg-primary_300 px-2 hover:bg-primary_400 hover:cursor-pointer mx-2 my-1 rounded-md"
+      (click)="toggleSelectedUserRole(0)"
+    >
+      Toggle User
+    </li>
+    <li
+      class="select-none bg-primary_300 px-2 hover:bg-primary_400 hover:cursor-pointer mx-2 my-1 rounded-md"
+      (click)="toggleSelectedUserRole(1)"
+    >
+      Toggle Group Admin
+    </li>
+    <li
+      class="select-none bg-primary_300 px-2 hover:bg-primary_400 hover:cursor-pointer mx-2 my-1 rounded-md"
+      (click)="toggleSelectedUserRole(2)"
+    >
+      Toggle Super Admin
+    </li>
+    <li
+      class="select-none bg-primary_300 px-2 hover:bg-primary_400 hover:cursor-pointer mx-2 my-1 rounded-md"
+    >
+      Delete User
+    </li>
+    <li></li>
+  </ul>
+  <div
+    (click)="saveUser()"
+    class="flex flex-grow bg-primary_300 rounded-md justify-center mt-2"
+  >
+    Save
+  </div>
+</div>

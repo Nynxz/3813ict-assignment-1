@@ -13,14 +13,8 @@ export class SuperServerWidgetComponent {
   @Input() server: any;
   @Input() selected: any;
   selectedServer: any;
-  folded = false;
-
-  serverName = '';
-  imageURL = '';
 
   fold() {
     this.selectedServer = this.server;
-    // this.folded = !this.folded;
-    console.log('Folding', this.server);
   }
 }

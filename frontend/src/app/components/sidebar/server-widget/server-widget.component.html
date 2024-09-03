@@ -1,10 +1,23 @@
-<div class="outer-div">
-  <a (click)="setGroup(server)" [routerLink]="'/chat'" class="flex flex-grow">
+<div
+  [ngClass]="selected ? 'bg-primary_accent' : 'bg-primary_400'"
+  class="outer-div"
+>
+  <a
+    (click)="onClick($event)"
+    (click)="setGroup(server)"
+    [routerLink]="'/chat'"
+    class="flex flex-grow"
+    draggable="false"
+  >
     <span class="notif-outer-span">
       <span class="notif-pulse"></span>
       <span class="notif-base"></span>
     </span>
-    <img class="rounded-md w-8 h-8" src="{{ server?.imageURL }}" />
+    <img
+      class="rounded-md w-8 h-8 select-none"
+      src="{{ server?.imageURL }}"
+      draggable="false"
+    />
     <p *ngIf="folded" class="leading-4 w-full">{{ server?.name }}</p>
   </a>
 </div>

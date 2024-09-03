@@ -12,18 +12,18 @@ import { UserService } from '@services/user/user.service';
   styleUrl: './login-form.component.css',
 })
 export class LoginFormComponent {
-  email = '';
+  username = '';
   password = '';
   Error = new Error();
 
   constructor(private userService: UserService) {}
 
   handleSubmit() {
-    if (this.email == '' || this.password == '') {
+    if (this.username == '' || this.password == '') {
       this.Error.set('Empty Input');
       return;
     } else {
-      this.userService.login(this.email, this.password).then((e: any) => {
+      this.userService.login(this.username, this.password).then((e: any) => {
         if (e.error) {
           this.Error.set(e.error);
         }

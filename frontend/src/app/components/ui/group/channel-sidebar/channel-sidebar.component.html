@@ -1,10 +1,26 @@
-<div class="border-r-[1px] border-black h-full rounded-md p-2 max-w-40 w-40">
-  <h2 class="font-bold text-xl mb-2 overflow-clip line-clamp-1">
-    {{ server()?.groupName || "Loading..." }}
-  </h2>
-  <ul class="flex gap-2 flex-col">
-    @for (item of [1, 2, 3, 4, 5]; track $index) {
-    <group-channel-widget [serverID]="server()?._id" [channelID]="item" />
-    }
-  </ul>
+<div
+  class="justify-between flex flex-col border-r-[1px] border-black h-full rounded-md p-2 max-w-40 w-40 bg-primary_300"
+>
+  <div>
+    <h2
+      class="font-bold text-xl mb-2 overflow-clip line-clamp-1 rounded-md select-none px-2 hover:cursor-pointer hover:bg-primary_400"
+      (click)="goToGroupHome()"
+    >
+      {{ group()?.name || "Loading..." }}
+    </h2>
+    <ul class="flex gap-2 flex-col flex-grow">
+      @for (item of channels(); track $index) {
+      <group-channel-widget
+        [channel]="item"
+        [selected]="selected()!._id == item?._id"
+      />
+      }
+    </ul>
+  </div>
+  <div
+    class="rounded-md bg-primary_200 hover:cursor-pointer hover:bg-primary_400"
+    (click)="goToGroupSettings()"
+  >
+    Group Settings
+  </div>
 </div>

@@ -1,0 +1,19 @@
+/* .outer-div {
+  @apply flex flex-grow flex-col min-h-full min-w-max  w-72   rounded-md;
+} */
+
+.inner-div {
+  @apply bg-primary_300 flex flex-grow flex-col rounded-md px-8 py-2 h-1/2 border-black border-[1px] border-solid w-max select-none m-auto;
+}
+
+.input {
+  @apply w-full rounded-md border-black border-[1px];
+}
+
+.submit-button {
+  @apply mt-3 cursor-pointer hover:bg-black hover:bg-opacity-25;
+}
+
+.error {
+  @apply text-red-500 font-bold underline border-red-500 border-2 bg-white rounded-md mt-4 select-none;
+}

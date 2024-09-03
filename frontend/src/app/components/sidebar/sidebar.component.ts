@@ -1,4 +1,4 @@
-import { Component, computed } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { FoldButtonComponent } from './fold-button/fold-button.component';
 import { NgClass } from '@angular/common';
 import { LoginButtonComponent } from './login-button/login-button.component';
@@ -6,6 +6,7 @@ import { ServerWidgetComponent } from './server-widget/server-widget.component';
 import { RouterLink } from '@angular/router';
 import { PreferencesService } from '@services/preferences/preferences.service';
 import { GroupService } from '@services/group/group.service';
+import { Group } from '@/group.type';
 
 @Component({
   selector: 'app-sidebar',
@@ -26,6 +27,8 @@ export class SidebarComponent {
     private groupService: GroupService
   ) {}
 
+  selectedGroup = signal(undefined as Group | undefined);
+
   servers = computed(() => this.groupService.groups());
 
   folded = computed(() =>
@@ -37,5 +40,9 @@ export class SidebarComponent {
       'sidebarfolded',
       this.folded() ? 'false' : 'true'
     );
+  }
+
+  selectGroup(group: Group | undefined) {
+    this.selectedGroup.set(group);
   }
 }

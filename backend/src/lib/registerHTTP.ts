@@ -1,5 +1,5 @@
 import { Request, Response, Router, IRouter } from "express";
-import { Gateway, GRouter } from "../gateway";
+import { Gateway } from "../gateway";
 import { Logger } from "./logger";
 import { Middleware } from "./middleware";
 import { logResponseStatus } from "./utils";
@@ -30,7 +30,7 @@ type RouterMethod = "get" | "set" | "delete" | "head" | "post";
 export function registerHTTP(
   method: RouterMethod,
   endpoint: string,
-  router: GRouter,
+  router: Router,
   callback: (req: Request, res: Response) => void,
   middlewares?: Array<Middleware>
 ) {
@@ -53,7 +53,7 @@ export function registerHTTP(
     };
     /* Below runs after every request*/
     res.on("finish", () => {
-      if (router.gateway.debug) logResponseStatus(res, method, endpoint);
+      if (Gateway.debug) logResponseStatus(res, method, endpoint);
     });
     try {
       // Start request

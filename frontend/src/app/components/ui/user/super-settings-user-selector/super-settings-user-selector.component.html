@@ -1,0 +1,16 @@
+<span class="font-bold text-xl px-2 border-b-[1px] border-black"> Users </span>
+<div class="overflow-auto flex flex-grow flex-col h-0">
+  <ul>
+    @for (user of users; track $index) {
+    <li
+      class="hover:bg-primary_400 mx-2 my-1 rounded-md"
+      [ngClass]="
+        lastSelected?._id == user._id ? 'bg-primary_accent' : 'bg-primary_300'
+      "
+      (click)="emitSelectUser(user)"
+    >
+      {{ user.username }}
+    </li>
+    }
+  </ul>
+</div>

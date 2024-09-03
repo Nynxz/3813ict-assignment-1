@@ -1,22 +1,38 @@
 <div class="outer-div">
   <div class="inner-div">
+    <div class="font-bold underline text-xl">Login</div>
     <form (ngSubmit)="handleSubmit()">
-      <label for="framework">
-        Email
-        <input type="text" name="email" class="input" [(ngModel)]="email" />
-      </label>
-      <label for="framework">
-        Password
-        <input
-          type="password"
-          name="password"
-          class="input"
-          [(ngModel)]="password"
-        />
-      </label>
-      <input type="submit" class="input submit-button" />
+      <ul>
+        <li>
+          <label for="framework">
+            Username
+            <input
+              type="text"
+              name="username"
+              class="input"
+              [(ngModel)]="username"
+            />
+          </label>
+        </li>
+        <li>
+          <label for="framework">
+            Password
+            <input
+              type="password"
+              name="password"
+              class="input"
+              [(ngModel)]="password"
+            />
+          </label>
+        </li>
+        <li>
+          <input type="submit" class="input submit-button" />
+        </li>
+      </ul>
     </form>
-
+  </div>
+  <div class="text-center">
     <p *ngIf="Error.enabled" class="error">Error: {{ Error.text }}</p>
+    <div *ngIf="!Error.enabled" class="h-11"></div>
   </div>
 </div>

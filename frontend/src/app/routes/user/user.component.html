@@ -1,43 +1,50 @@
 <div
-  class="min-w-full flex flex-grow flex-col justify-center text-center justify-items-center"
+  class="flex flex-grow flex-col bg-primary_300 justify-center m-2 rounded-md p-2"
 >
-  User Page
-  <div>
-    <button
-      class="font-semibold border-black border-[1px] border-solid rounded-md p-1 px-8 hover:bg-gray-100"
-      (click)="logout()"
-    >
-      Logout!
-    </button>
+  <div class="flex flex-row justify-between">
+    <div class="flex flex-grow text-4xl underline font-bold">User Settings</div>
+    <div class="flex">
+      <button
+        class="my-auto font-semibold border-black border-[1px] border-solid rounded-md p-1 px-8 hover:bg-gray-100"
+        (click)="logout()"
+      >
+        Logout!
+      </button>
+    </div>
+  </div>
+  <div class="pt-2">
+    <ul class="flex flex-row ml-2 text-white">
+      <li
+        class="rounded-t-md hover:bg-primary_200 hover:cursor-pointer border-[1px] border-b-0 border-black px-2"
+        (click)="selected = 0"
+        [ngClass]="{
+          hidden: !super,
+          'bg-primary_500': selected == 0,
+          'bg-primary_400': selected != 0
+        }"
+      >
+        Super
+      </li>
+      <li
+        class="rounded-t-md hover:bg-primary_200 hover:cursor-pointer border-[1px] border-b-0 border-black px-2"
+        (click)="selected = 1"
+        [ngClass]="{
+          hidden: !admin,
+          'bg-primary_500': selected == 1,
+          'bg-primary_400': selected != 1
+        }"
+      >
+        Admin
+      </li>
+    </ul>
+  </div>
+  <div class="flex flex-grow flex-col bg-primary_100 rounded-md pt-0">
+    <div class="flex flex-grow w-full flex-col">
+      <user-super-settings [ngClass]="super && selected == 0 ? '' : 'hidden'" />
+      <user-super-panel [ngClass]="admin && selected == 1 ? '' : 'hidden'" />
+      <!-- <user-admin-panel [ngClass]="admin && selected == 1 ? '' : 'hidden'" /> -->
+    </div>
   </div>
 
-  <ul class="flex flex-row ml-2">
-    <li
-      class="rounded-t-md hover:bg-gray-100 hover:cursor-pointer border-[1px] border-b-0 border-black px-2"
-      (click)="selected = 0"
-      [ngClass]="{
-        hidden: !super,
-        'bg-gray-200': selected == 0,
-        'bg-gray-400': selected != 0
-      }"
-    >
-      Super
-    </li>
-    <li
-      class="rounded-t-md hover:bg-gray-100 hover:cursor-pointer border-[1px] border-b-0 border-black px-2"
-      (click)="selected = 1"
-      [ngClass]="{
-        hidden: !admin,
-        'bg-gray-200': selected == 1,
-        'bg-gray-400': selected != 1
-      }"
-    >
-      Admin
-    </li>
-  </ul>
-
-  <ul class="border-t-[1px] border-black">
-    <user-super-panel [ngClass]="super && selected == 0 ? '' : 'hidden'" />
-    <user-admin-panel [ngClass]="admin && selected == 1 ? '' : 'hidden'" />
-  </ul>
+  <!-- <ul class="border-t-[1px] border-black"></ul> -->
 </div>

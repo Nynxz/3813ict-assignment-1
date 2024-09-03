@@ -10,8 +10,8 @@ import { GroupService } from '@services/group/group.service';
   styleUrl: './super-update-server-panel.component.css',
 })
 export class SuperUpdateServerPanelComponent implements OnChanges {
-  @Input() group: { groupName: string; imageURL: string; _id?: string } = {
-    groupName: '',
+  @Input() group: { name: string; imageURL: string; _id?: string } = {
+    name: '',
     imageURL: '',
   };
   @Input() creating: boolean = false;
