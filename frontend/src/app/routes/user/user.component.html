@@ -40,8 +40,11 @@
   </div>
   <div class="flex flex-grow flex-col bg-primary_100 rounded-md pt-0">
     <div class="flex flex-grow w-full flex-col">
+      @if (super){
       <user-super-settings [ngClass]="super && selected == 0 ? '' : 'hidden'" />
+      } @if(admin){
       <user-super-panel [ngClass]="admin && selected == 1 ? '' : 'hidden'" />
+      }
       <!-- <user-admin-panel [ngClass]="admin && selected == 1 ? '' : 'hidden'" /> -->
     </div>
   </div>

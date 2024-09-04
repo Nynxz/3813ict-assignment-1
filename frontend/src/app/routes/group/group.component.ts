@@ -57,7 +57,7 @@ export class GroupComponent {
     private chatService: ChatService,
     private router: Router
   ) {
-    this.groupService.getGroups().subscribe((e) => {
+    this.groupService.http_getGroups().subscribe((e) => {
       this.server = e.find((a) => a._id == this.id);
     });
     if (!this.selectedGroup()) {

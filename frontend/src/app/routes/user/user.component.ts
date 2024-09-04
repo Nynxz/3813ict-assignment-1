@@ -43,8 +43,10 @@ export class UserComponent implements OnInit {
       switch (e) {
         case Roles.ADMIN:
           this.admin = true;
+          this.selected = 1;
           break;
         case Roles.SUPER:
+          this.admin = true;  
           this.super = true;
           break;
       }
