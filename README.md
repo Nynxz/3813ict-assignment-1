@@ -240,8 +240,7 @@ A request which contains above, must recieve a payload like below.
 ```
 
 ## Routes
-> #### Note
-> Many routes are currently POST instead of GET, due to requiring a JWT token. I am aware I can use headers to supply "an auth bearer token". I am in the process of converting middleware, routes and angular services to use headers instead of the request body. Currently `routes/test.ts`  `GET /jwttest` route has 
+
 ```
 [gateway]: ----channels.ts----
 [gateway]: ++ (GET) /channel/messages
