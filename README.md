@@ -79,11 +79,9 @@ Represents a group of the application.
 - _id: uuid | Unique
 - name: string
 - imageURL: string
-- users: User[]*
-- admins: User[]*
 - channels: Channel[]*
+- admins: User[]*
 ```
-
 
 #### **Channel**
 Represents a channel belonging to a group. Created by an ADMIN or SUPER user
@@ -91,18 +89,16 @@ Represents a channel belonging to a group. Created by an ADMIN or SUPER user
 - _id: uuid | Unique
 - name: string
 - group: Group*
-- messages: Messages[]*
+- users: User[]*
 ```
-
-
 
 #### **Message**
 Represents a message sent in a channel, from a user.
 ```
 - _id: uuid | Unique
 - content: string
-- sender: User*
 - channel: Channel*
+- sender: User*
 ```
 
 ## Angular Architecture
@@ -230,10 +226,10 @@ requireObjectHasKeys("message", ["content", "channel"]),
   ```
 A request which contains above, must recieve a payload like below.
 ```json
-headers: {
+"headers": {
   "Authorization": "Bearer <JWT which contains the role USER>",
 },
-body: {
+"body": {
   "message": {
     "content": "",
     "channel": ""
