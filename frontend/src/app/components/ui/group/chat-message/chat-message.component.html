@@ -1,27 +1,16 @@
 <div class="flex flex-row mb-2 flex-grow">
-  @if (message.sender == userId()) {
-  <div class="flex flex-grow">
-    <div
-      class="flex w-3/4 ms-auto bg-gray-200 my-auto border-black rounded-md border-[1px] px-2 py-1 rounded-tr-none"
-    >
-      {{ message.content }}
-    </div>
-  </div>
-  <img
-    src="user-svgrepo-com.svg"
-    alt="svg user"
-    class="h-8 select-none pointer-events-none border-black border-[1px] rounded-r-md border-l-0 p-1"
-  />
-  } @else {
   <img
     src="user-svgrepo-com.svg"
     alt="svg user"
     class="h-8 select-none pointer-events-none border-black border-[1px] rounded-l-md border-r-0 p-1"
   />
   <div
-    class="flex w-3/4 justify-start bg-gray-100 my-auto border-black rounded-md border-[1px] px-2 py-1 rounded-tl-none"
+    class="flex flex-col w-full bg-gray-100 my-auto border-black rounded-md border-[1px] px-2 py-1 rounded-tl-none"
+    [ngClass]="message.sender._id == userId() ? 'bg-gray-300' : ''"
   >
-    {{ message.content }}
+    <span class="font-bold underline">
+      {{ message.sender.username }} @if(message.sender._id == userId()){(you)}
+    </span>
+    <div>{{ message.content }}</div>
   </div>
-  }
 </div>

@@ -34,6 +34,8 @@ export class GroupSettingsComponent {
 
   channelName = '';
 
+  newUserToAdd = '';
+
   constructor(
     private chatService: ChatService,
     private groupService: GroupService
@@ -41,7 +43,7 @@ export class GroupSettingsComponent {
 
   createChannel() {
     this.groupService.createChannel({
-      name: 'test',
+      name: 'New Channel',
       group: this.chatService.selectedGroup()!._id,
     });
   }
@@ -70,5 +72,29 @@ export class GroupSettingsComponent {
       ...this.configChannel()!,
       name: this.channelName,
     });
+  }
+
+  addUser() {
+    console.log(this.chatService.selectedGroup());
+    this.groupService.addUserToGroup(
+      this.newUserToAdd,
+      this.chatService.selectedGroup()!._id
+    );
+    this.newUserToAdd = '';
+  }
+
+  kickUserFromGroup() {
+    this.groupService
+      .http_postRemoveUserFromGroup(
+        this.configUser()?.username!,
+        this.chatService.selectedGroup()?._id!
+      )
+      .subscribe((e) => {
+        this.chatService.selectGroup(this.chatService.selectedGroup()!);
+      });
+  }
+
+  promoteUserToGroupAdmin() {
+    console.log(this.configUser());
   }
 }

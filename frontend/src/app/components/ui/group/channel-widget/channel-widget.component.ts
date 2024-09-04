@@ -20,7 +20,6 @@ export class ChannelWidgetComponent {
   constructor(private chatService: ChatService) {}
 
   setChannel(channelID: string) {
-    console.log('set channel', channelID);
     this.chatService.selectChannel(this.channel);
   }
 }

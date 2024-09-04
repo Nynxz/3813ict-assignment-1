@@ -24,10 +24,7 @@ export class ChannelSidebarComponent {
   @Input()
   goToGroupHomeBind: WritableSignal<boolean> = signal(false);
 
-  constructor(
-    private chatService: ChatService,
-    private groupService: GroupService
-  ) {}
+  constructor(private chatService: ChatService) {}
 
   goToGroupSettings() {
     this.goToGroupHome();
@@ -38,12 +35,4 @@ export class ChannelSidebarComponent {
     this.goToGroupHomeBind.set(false);
     this.chatService.selectChannel(undefined);
   }
-
-  // createChannel() {
-  //   console.log(this.group());
-  //   this.groupService.createChannel({
-  //     name: 'test',
-  //     group: this.group()!._id,
-  //   });
-  // }
 }

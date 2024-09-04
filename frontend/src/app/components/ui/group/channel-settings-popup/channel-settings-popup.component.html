@@ -7,5 +7,40 @@
     >
       Delete Channel
     </li>
+    <li class="flex flex-row justify-between mt-2">
+      <div class="flex my-auto">
+        <input
+          type="text"
+          name="userToAdd"
+          class="rounded-md my-auto"
+          [(ngModel)]="userToAdd"
+          (keyup.enter)="addUserToChannel()"
+        />
+      </div>
+      <div
+        class="hover:bg-primary_300 hover:cursor-pointer select-none flex my-auto bg-primary_100 rounded-md px-4"
+        (click)="addUserToChannel()"
+      >
+        Add
+      </div>
+    </li>
+    <li class="select-none bg-primary_100 rounded-md px-2 mt-2 py-2">
+      <div class="h-40">
+        <user-super-settings-user-selector
+          [users]="channelUsers"
+          (selectUser)="selectedUser = $event"
+          class="h-40"
+        />
+      </div>
+    </li>
+    <li>Selected User: {{ selectedUser?.username }}</li>
+    @if (selectedUser) {
+    <li
+      class="hover:bg-primary_300 hover:cursor-pointer select-none bg-primary_100 rounded-md px-2"
+      (click)="removeUserFromChannel()"
+    >
+      Remove User
+    </li>
+    }
   </ul>
 </div>

@@ -5,7 +5,7 @@
 
   <div class="flex flex-grow bg-primary_100 rounded-md p-2 mt-2">
     <div class="grid grid-cols-3 grid-rows-10 w-full max-h-full gap-2">
-      <div
+      <!-- <div
         class="col-span-1 row-span-1 grid grid-rows-3 bg-primary_200 rounded-md border-black border-[1px]"
       >
         <span class="font-bold text-xl px-2"> Stats </span>
@@ -14,7 +14,7 @@
         class="col-span-2 row-span-1 grid grid-rows-3 bg-primary_200 rounded-md border-black border-[1px]"
       >
         <span class="font-bold text-xl px-2"> Stats </span>
-      </div>
+      </div> -->
       <!-- SELECTOR  -->
       <div class="col-span-1 row-span-4 flex flex-col">
         <div class="pl-2 flex flex-row gap-1">
@@ -92,11 +92,22 @@
         >
           <div class="flex justify-between p-2">
             <span class="font-bold"> Users </span>
-            <span
-              class="font-bold bg-primary_300 rounded-md px-2 hover:cursor-pointer hover:bg-primary_400"
-            >
-              Add
-            </span>
+            <div class="flex flex-row">
+              <input
+                type="text"
+                name="newUser"
+                id="newUser"
+                class="rounded-md"
+                [(ngModel)]="newUserToAdd"
+                (keyup.enter)="addUser()"
+              />
+              <div
+                class="font-bold h-max bg-primary_300 rounded-md px-2 flex-grow hover:cursor-pointer hover:bg-primary_400"
+                (click)="addUser()"
+              >
+                Add
+              </div>
+            </div>
           </div>
           <div
             class="overflow-auto flex flex-grow flex-col h-0 border-t-[1px] border-black"
@@ -190,6 +201,7 @@
                 <li>
                   <span
                     class="font-bold bg-primary_300 rounded-md px-2 mr-2 hover:cursor-pointer hover:bg-primary_400 max-h-min my-auto"
+                    (click)="promoteUserToGroupAdmin()"
                   >
                     Promote to Group Admin
                   </span>
@@ -197,6 +209,7 @@
                 <li>
                   <span
                     class="font-bold bg-primary_300 rounded-md px-2 mr-2 hover:cursor-pointer hover:bg-primary_400 max-h-min my-auto"
+                    (click)="kickUserFromGroup()"
                   >
                     Kick User
                   </span>
