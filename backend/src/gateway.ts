@@ -1,18 +1,12 @@
 import { CONFIG } from "./config";
-import express, { Router } from "express";
+import express from "express";
 import { readdirSync } from "fs";
 import cors from "cors";
 import { Logger } from "./lib/logger";
-import { MongoClient } from "mongodb";
 import { config } from "dotenv";
 import mongoose from "mongoose";
 config(); //Load .env file
 
-// export type GRouter = Router & {
-//   gateway: Gateway;
-// };
-
-// uh this make the thing work, it do the thing and like yeh, makes it work, thanks
 export class Gateway {
   app;
   router;
@@ -59,12 +53,13 @@ export class Gateway {
   }
 
   // Load /src/routes/*.ts files
-  async _loadRoutesFolder() {
+  private async _loadRoutesFolder() {
     const routesDir = "./src/routes";
     const routeFiles = readdirSync(routesDir).filter((file) =>
       file.endsWith(".ts")
     );
     for (const file of routeFiles) {
+      Logger.logGreenUnderline(`----${file}----`);
       const registerRoutes = await import("./routes/" + file);
       const registerFunc = registerRoutes.default;
       if (typeof registerFunc === "function") {
