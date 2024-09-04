@@ -73,7 +73,20 @@ export class ChatService {
       }),
       {
         headers: {
-          Authorization: 'Bearer ' + this.preferencesService.getItem('jwt'),
+          Authorization: 'Bearer ' + this.preferencesService.preferences().jwt,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  }
+
+  // GET /channel/users
+  http_getChannelUsers() {
+    return this.httpClient.get(
+      environment.backend_base_URL + '/channel/users',
+      {
+        headers: {
+          channel: this.selectedChannel()!._id as string,
           'Content-Type': 'application/json',
         },
       }
@@ -87,6 +100,7 @@ export class ChatService {
       {
         headers: {
           group: this.selectedGroup()!._id as string,
+          Authorization: 'Bearer ' + this.preferencesService.preferences().jwt,
           'Content-Type': 'application/json',
         },
       }
@@ -110,7 +124,7 @@ export class ChatService {
       {
         headers: {
           channel: this.selectedChannel()?._id || '',
-          Authorization: 'Bearer ' + this.preferencesService.getItem('jwt'),
+          Authorization: 'Bearer ' + this.preferencesService.preferences().jwt,
           'Content-Type': 'application/json',
         },
       }

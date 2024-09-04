@@ -22,12 +22,11 @@ type LoginJWT = {
 })
 export class UserService {
   constructor(
-    private preferencesService: PreferencesService,
+    private preferenceService: PreferencesService,
     private httpClient: HttpClient,
     private router: Router,
     private groupService: GroupService
   ) {
-    console.log('ON INIT USER');
     this.auto_login();
   }
 
@@ -38,65 +37,76 @@ export class UserService {
   user: WritableSignal<User | undefined> = signal(undefined);
 
   auto_login() {
-    let _jwt = this.preferencesService.getItem('jwt');
-    if (_jwt) {
+    let _jwt = this.preferenceService.preferences().jwt;
+    if (_jwt != '') {
       try {
         this.user.set(jwtDecode(_jwt) as LoginJWT);
-        this.groupService.updateServers();
+        this.groupService.refreshGroups();
+        console.log('AUTOLOGIN: SUCCESS');
         // this.router.navigateByUrl('/user');
       } catch (error) {
         console.log(error);
+        console.log('AUTOLOGIN: FAILURE');
       }
     }
   }
 
   login(username: string, password: string) {
     return new Promise((res) => {
-      this._backendLogin(username, password).subscribe({
+      this.http_postUserLogin(username, password).subscribe({
         next: (e) => {
           res({ success: true });
-          this.preferencesService.setItem('jwt', e.jwt);
-          console.log(e);
+          this.preferenceService.setItem('jwt', e.jwt);
           this.auto_login();
           this.router.navigateByUrl('/user');
         },
         error: (f) => {
           res({ error: f.error.error });
-          console.error(f.error.error);
         },
       });
-    }); // this.name.set(_name);
+    });
   }
 
   register(email: string, password: string, username: string) {
     return new Promise((res) => {
-      this.httpClient
-        .post<LoginResponse>(
-          environment.backend_base_URL + '/user/create',
-          JSON.stringify({ user: { email, password, username } }),
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        )
-        .subscribe({
-          next: (e) => {
-            res({ success: true });
-            this.preferencesService.setItem('jwt', e.jwt);
-            console.log(e);
-            this.auto_login();
-            this.router.navigateByUrl('/user');
-          },
-          error: (f) => {
-            res({ error: f.error.error });
-            console.error(f.error.error);
-          },
-        });
-    }); // this.name.set(_name);
+      this.http_postUserCreate(email, password, username).subscribe({
+        next: (e) => {
+          res({ success: true });
+          this.preferenceService.setItem('jwt', e.jwt);
+          this.auto_login();
+          this.router.navigateByUrl('/user');
+        },
+        error: (f) => {
+          res({ error: f.error.error });
+        },
+      });
+    });
   }
 
-  _backendLogin(username: string, password: string) {
+  logout() {
+    this.user.set(undefined);
+    this.preferenceService.setItem('jwt', '');
+    this.router.navigateByUrl('/login');
+    this.groupService.refreshGroups();
+  }
+
+  /*  HTTP  */
+
+  // POST /user/create
+  http_postUserCreate(email: string, password: string, username: string) {
+    return this.httpClient.post<LoginResponse>(
+      environment.backend_base_URL + '/user/create',
+      JSON.stringify({ user: { email, password, username } }),
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  }
+
+  // POST /user/login
+  http_postUserLogin(username: string, password: string) {
     return this.httpClient.post<LoginResponse>(
       environment.backend_base_URL + '/user/login',
       JSON.stringify({ user: { username, password } }),
@@ -108,22 +118,14 @@ export class UserService {
     );
   }
 
-  logout() {
-    this.user.set(undefined);
-    this.preferencesService.setItem('jwt', '');
-    this.router.navigateByUrl('/login');
-    this.groupService.groups.set([]);
-  }
-
-  getAllUsers() {
-    return this.httpClient.post(
-      environment.backend_base_URL + '/users/all',
-      JSON.stringify({ jwt: this.preferencesService.getItem('jwt') }),
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+  // GET /users/all
+  //TODO: Move to admin service or something?
+  http_getAllUsers() {
+    return this.httpClient.get(environment.backend_base_URL + '/users/all', {
+      headers: {
+        Authorization: 'Bearer ' + this.preferenceService.preferences().jwt,
+        'Content-Type': 'application/json',
+      },
+    });
   }
 }

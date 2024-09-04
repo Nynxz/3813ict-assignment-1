@@ -1,3 +1,4 @@
+import { User } from '@/user.type';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
@@ -9,24 +10,27 @@ import { PreferencesService } from '@services/preferences/preferences.service';
 export class SuperUserService {
   constructor(
     private httpClient: HttpClient,
-    private preferencesService: PreferencesService
+    private preferenceService: PreferencesService
   ) {}
 
   updateUser(user: any) {
-    this._backendUpdateUser(user).subscribe(e => {
-      console.log(e)
-    })
+    this.http_postUpdateUser(user).subscribe((e) => {
+      console.log(e);
+    });
   }
 
-  _backendUpdateUser(user: any) {
+  /* HTTP */
+
+  // POST /super/updateuser
+  http_postUpdateUser(user: Partial<User>) {
     return this.httpClient.post(
       environment.backend_base_URL + '/super/updateuser',
       JSON.stringify({
         user: user,
-        jwt: this.preferencesService.getItem('jwt'),
       }),
       {
         headers: {
+          Authorization: 'Bearer ' + this.preferenceService.preferences().jwt,
           'Content-Type': 'application/json',
         },
       }

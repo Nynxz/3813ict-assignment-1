@@ -17,12 +17,12 @@ export class GroupService {
 
   constructor(
     private httpClient: HttpClient,
-    private preferences: PreferencesService,
+    private preferenceService: PreferencesService,
     private chatService: ChatService
   ) {}
 
   refreshGroups() {
-    this.preferences.getItem('jwt') != ''
+    this.preferenceService.preferences().jwt != ''
       ? this.http_getGroups().subscribe((e) => {
           this.groups.set(e);
         })
@@ -31,14 +31,10 @@ export class GroupService {
 
   updateGroup(group: any) {
     try {
-      // return this.httpClient.get('http://localhost:3010/ping');
       return this.http_postUpdateGroup(group).pipe(
         catchError((error: HttpErrorResponse) => {
-          // window.location.reload();
-          // this.router.navigateByUrl('/login');
-          this.preferences.setItem('jwt', '');
+          this.preferenceService.setItem('jwt', '');
           return throwError(() => {
-            // window.location.reload();
             return new Error('Something bad happened; please try again later.');
           });
         })
@@ -73,7 +69,6 @@ export class GroupService {
       this.http_postUpdateChannel(channel)
         .pipe(
           catchError((res: HttpErrorResponse) => {
-            // window.location.reload();
             return throwError(() => {
               return new Error(res.error.error);
             });
@@ -106,6 +101,40 @@ export class GroupService {
 
   /* HTTP */
 
+  // POST /channel/adduser
+  http_postAddUserToChannel(channel: string, username: string) {
+    return this.httpClient.post(
+      environment.backend_base_URL + '/channel/adduser',
+      JSON.stringify({
+        channel,
+        username,
+      }),
+      {
+        headers: {
+          Authorization: 'Bearer ' + this.preferenceService.preferences().jwt,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  }
+
+  // POST /channel/removeuser
+  http_postRemoveUserFromChannel(channel: string, username: string) {
+    return this.httpClient.post(
+      environment.backend_base_URL + '/channel/removeuser',
+      JSON.stringify({
+        channel,
+        username,
+      }),
+      {
+        headers: {
+          Authorization: 'Bearer ' + this.preferenceService.preferences().jwt,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  }
+
   // POST /channel/create
   http_postCreateChannel(channel: Partial<Channel>) {
     return this.httpClient.post(
@@ -113,7 +142,7 @@ export class GroupService {
       JSON.stringify({ channel }),
       {
         headers: {
-          Authorization: 'Bearer ' + this.preferences.getItem('jwt'),
+          Authorization: 'Bearer ' + this.preferenceService.preferences().jwt,
           'Content-Type': 'application/json',
         },
       }
@@ -127,7 +156,7 @@ export class GroupService {
       JSON.stringify({ channel }),
       {
         headers: {
-          Authorization: 'Bearer ' + this.preferences.getItem('jwt'),
+          Authorization: 'Bearer ' + this.preferenceService.preferences().jwt,
           'Content-Type': 'application/json',
         },
       }
@@ -141,7 +170,7 @@ export class GroupService {
       JSON.stringify({ channel: channel }),
       {
         headers: {
-          Authorization: 'Bearer ' + this.preferences.getItem('jwt'),
+          Authorization: 'Bearer ' + this.preferenceService.preferences().jwt,
           'Content-Type': 'application/json',
         },
       }
@@ -152,7 +181,7 @@ export class GroupService {
   http_getGroups() {
     return this.httpClient.get(environment.backend_base_URL + '/groups', {
       headers: {
-        Authorization: 'Bearer ' + this.preferences.getItem('jwt'),
+        Authorization: 'Bearer ' + this.preferenceService.preferences().jwt,
         'Content-Type': 'application/json',
       },
     }) as Observable<Group[]>;
@@ -165,7 +194,7 @@ export class GroupService {
       JSON.stringify({ group }),
       {
         headers: {
-          Authorization: 'Bearer ' + this.preferences.getItem('jwt'),
+          Authorization: 'Bearer ' + this.preferenceService.preferences().jwt,
           'Content-Type': 'application/json',
         },
       }
@@ -179,7 +208,7 @@ export class GroupService {
       JSON.stringify({ group }),
       {
         headers: {
-          Authorization: 'Bearer ' + this.preferences.getItem('jwt'),
+          Authorization: 'Bearer ' + this.preferenceService.preferences().jwt,
           'Content-Type': 'application/json',
         },
       }
@@ -188,6 +217,7 @@ export class GroupService {
 
   // POST /groups/adduser
   http_postAddUserToGroup(username: string, groupID: string) {
+    console.log(username, groupID);
     return this.httpClient.post(
       environment.backend_base_URL + '/groups/adduser',
       JSON.stringify({
@@ -196,7 +226,24 @@ export class GroupService {
       }),
       {
         headers: {
-          Authorization: 'Bearer ' + this.preferences.getItem('jwt'),
+          Authorization: 'Bearer ' + this.preferenceService.preferences().jwt,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  }
+
+  // POST /groups/removeuser
+  http_postRemoveUserFromGroup(username: string, groupID: string) {
+    return this.httpClient.post(
+      environment.backend_base_URL + '/groups/removeuser',
+      JSON.stringify({
+        group: { _id: groupID },
+        user: { username },
+      }),
+      {
+        headers: {
+          Authorization: 'Bearer ' + this.preferenceService.preferences().jwt,
           'Content-Type': 'application/json',
         },
       }
