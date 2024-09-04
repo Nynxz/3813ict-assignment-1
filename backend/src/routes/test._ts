@@ -1,9 +1,9 @@
 import { Request, Response, Router } from "express";
-import { registerHTTP } from "../lib/registerHTTP";
 import { Gateway } from "../gateway";
-import requireValidRole from "../middleware/requireValidRole";
+import { registerHTTP } from "../lib/registerHTTP";
 import requireBodyKey from "../middleware/requireBodyKey";
-import { Roles } from "../db/user";
+import requireValidRole from "../middleware/requireValidRole";
+import { Roles } from "../db/types/user";
 
 export default (router: Router, gateway: Gateway) => {
   registerHTTP("get", "/", router, (req, res) => {
@@ -37,8 +37,8 @@ export default (router: Router, gateway: Gateway) => {
     "/jwttest",
     router,
     async (req: Request, res: Response) => {
-      res.send(`Hello ${req.body.name}`);
+      res.send(`Hello ${res.locals.user.username}`);
     },
-    [requireValidRole(Roles.NOBODY)]
+    [requireValidRole(Roles.SUPER)]
   );
 };

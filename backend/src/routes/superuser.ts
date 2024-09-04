@@ -1,11 +1,10 @@
-import { Gateway } from "../gateway";
-import { registerHTTP } from "../lib/registerHTTP";
-
-import { sendMessage } from "../db/message";
-import requireObjectHasKeys from "../middleware/requireObjectHasKeys";
-import requireValidRole from "../middleware/requireValidRole";
-import { Roles, updateUser } from "../db/user";
 import { Router } from "express";
+import { db_user_update } from "../db/user";
+import requireValidRole from "../middleware/requireValidRole";
+import requireObjectHasKeys from "../middleware/requireObjectHasKeys";
+import { registerHTTP } from "../lib/registerHTTP";
+import { Roles } from "../db/types/user";
+import { Gateway } from "../gateway";
 
 export default (router: Router, gateway: Gateway) => {
   registerHTTP(
@@ -13,7 +12,7 @@ export default (router: Router, gateway: Gateway) => {
     "/super/updateuser",
     router,
     async (req, res) => {
-      let updatedUser = await updateUser(req.body.user);
+      let updatedUser = await db_user_update(req.body.user);
       res.send(updatedUser);
     },
     [requireValidRole(Roles.SUPER), requireObjectHasKeys("user", ["_id"])]

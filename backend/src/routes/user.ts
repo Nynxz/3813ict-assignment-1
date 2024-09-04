@@ -1,20 +1,30 @@
 import { Router } from "express";
-import { Gateway } from "../gateway";
 import { registerHTTP } from "../lib/registerHTTP";
-import requireValidRole from "../middleware/requireValidRole";
-import { Logger } from "../lib/logger";
+import { db_user_create, db_user_find, db_users_all } from "../db/user";
 import { generateUserJWT } from "../lib/jwt";
-import { createUser, findUser, getAllUsers, Roles, User } from "../db/user";
-import requireBodyKey from "../middleware/requireBodyKey";
+import { Roles, User } from "../db/types/user";
 import requireObjectHasKeys from "../middleware/requireObjectHasKeys";
+import requireValidRole from "../middleware/requireValidRole";
+import { Gateway } from "../gateway";
 
 export default (router: Router, gateway: Gateway) => {
+  registerHTTP(
+    "get",
+    "/users/all",
+    router,
+    async (req, res) => {
+      const users = await db_users_all();
+      res.send(users);
+    },
+    [requireValidRole(Roles.SUPER)]
+  );
+
   registerHTTP(
     "post",
     "/user/create",
     router,
     async (req, res) => {
-      const user = await createUser(req.body.user);
+      const user = await db_user_create(req.body.user);
       if (user) {
         res.send({
           jwt: generateUserJWT(user as Partial<User>),
@@ -31,7 +41,7 @@ export default (router: Router, gateway: Gateway) => {
     "/user/login",
     router,
     async (req, res) => {
-      const user = await findUser(req.body.user);
+      const user = await db_user_find(req.body.user);
       if (user) {
         res.send({
           jwt: generateUserJWT(user as Partial<User>),
@@ -41,17 +51,6 @@ export default (router: Router, gateway: Gateway) => {
       }
     },
     [requireObjectHasKeys("user", ["username", "password"])]
-  );
-
-  registerHTTP(
-    "post",
-    "/users/all",
-    router,
-    async (req, res) => {
-      const users = await getAllUsers();
-      res.send(users);
-    },
-    [requireValidRole(Roles.SUPER)]
   );
 
   registerHTTP("post", "/user/update", router, (req, res) => {});

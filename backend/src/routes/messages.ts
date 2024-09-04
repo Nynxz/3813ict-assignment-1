@@ -1,11 +1,10 @@
+import { Router } from "express";
 import { Gateway } from "../gateway";
 import { registerHTTP } from "../lib/registerHTTP";
-
-import { sendMessage } from "../db/message";
-import requireObjectHasKeys from "../middleware/requireObjectHasKeys";
+import { db_message_send } from "../db/message";
 import requireValidRole from "../middleware/requireValidRole";
-import { Roles } from "../db/user";
-import { Router } from "express";
+import requireObjectHasKeys from "../middleware/requireObjectHasKeys";
+import { Roles } from "../db/types/user";
 
 export default (router: Router, gateway: Gateway) => {
   registerHTTP(
@@ -15,10 +14,10 @@ export default (router: Router, gateway: Gateway) => {
     async (req, res) => {
       //get the groups of the user who requested
       res.send(
-        await sendMessage(
+        await db_message_send(
           req.body.message.content,
           req.body.message.channel,
-          res.locals.jwt._id
+          res.locals.user._id
         )
       );
     },
