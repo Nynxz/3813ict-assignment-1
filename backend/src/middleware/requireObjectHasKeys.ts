@@ -12,7 +12,12 @@ export default (object: string, keys: string[]) => {
       keys.forEach((key) => {
         if (!(req.body[object] as Object).hasOwnProperty(key) && allKeysFound) {
           allKeysFound = false;
-          res.status(400).send({ error: "Cannot find " + key });
+          res
+            .status(400)
+            .send({
+              error:
+                "Cannot find " + key + " in Request Body Object: " + object,
+            });
         }
       });
 
