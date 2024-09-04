@@ -21,6 +21,11 @@ export async function db_group_create(user: any, group: Group) {
   return newGroup;
 }
 
+// POST /groups/delete
+export async function db_group_delete(group: Group) {
+  return await GroupModel.deleteOne({ _id: group._id });
+}
+
 //TODO: Move to user?
 // GET /groups
 export async function db_user_groups(_user: any) {
@@ -49,9 +54,7 @@ export async function db_user_groups(_user: any) {
 // GET /groups/users
 export async function db_group_users(groupId: string) {
   let group = await GroupModel.findById(groupId);
-  console.log(group);
   let b = await UserModel.find({ groups: new ObjectId(group?._id) }).exec();
-  console.log(b);
   return b;
   // return await MongoClient.db("3813ICT")
   //   .collection("servers")
@@ -95,5 +98,29 @@ export async function db_group_channels(
     return await ChannelModel.find({ group }).exec();
   } else {
     return await ChannelModel.find({ group, users: user }).exec();
+  }
+}
+
+// POST /groups/promoteuser
+export async function db_group_promote_user_to_group_admin(
+  username: string,
+  groupID: string,
+  requesterID: string
+) {
+  let user = await UserModel.findOne({ username });
+  if (await check_userIsAdminOfGroup(requesterID, groupID)) {
+    if (requesterID == user?.id) {
+      return { error: "cannot remove self as admin" };
+    }
+    let channel = await GroupModel.findOne({ _id: groupID });
+    if (!channel?.admins.includes(user!._id)) {
+      channel?.admins.push(user!._id);
+    } else {
+      let i = channel?.admins.indexOf(user!._id);
+      channel.admins.splice(i, 1);
+    }
+    return await channel?.save();
+  } else {
+    return { error: "insufficent permissions" };
   }
 }

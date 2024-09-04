@@ -5,6 +5,8 @@ import {
   db_group_add_user,
   db_group_channels,
   db_group_create,
+  db_group_delete,
+  db_group_promote_user_to_group_admin,
   db_group_remove_user,
   db_group_update,
   db_group_users,
@@ -67,6 +69,28 @@ export default (router: Router, gateway: Gateway) => {
       }
       const server = await db_group_create(res.locals.user._id, req.body.group);
       res.send(JSON.stringify(server));
+    },
+    [requireValidRole(Roles.ADMIN)]
+  );
+
+  registerHTTP(
+    "post",
+    "/groups/delete",
+    router,
+    async (req, res) => {
+      //get the groups of the user who requested
+
+      let user = await UserModel.findOne({
+        username: res.locals.user.username,
+      });
+      if (
+        (user &&
+          (await check_userIsAdminOfGroup(user.id, req.body.group._id))) ||
+        res.locals.user.roles.includes(Roles.SUPER)
+      ) {
+        const server = await db_group_delete(req.body.group);
+        res.send(JSON.stringify(server));
+      }
     },
     [requireValidRole(Roles.ADMIN)]
   );
@@ -140,5 +164,22 @@ export default (router: Router, gateway: Gateway) => {
       requireObjectHasKeys("user", ["username"]),
       requireValidRole(Roles.ADMIN),
     ]
+  );
+
+  registerHTTP(
+    "post",
+    "/groups/promoteuser",
+    router,
+    async (req, res) => {
+      //get the groups of the user who requested
+      res.send(
+        await db_group_promote_user_to_group_admin(
+          req.body.user,
+          req.body.group,
+          res.locals.user._id
+        )
+      );
+    },
+    [requireAuthHeader(), requireBodyKey("user"), requireBodyKey("group")]
   );
 };
