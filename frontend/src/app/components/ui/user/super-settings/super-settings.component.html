@@ -2,7 +2,10 @@
   [users]="users"
   (selectUser)="selectUser($event)"
 />
-<user-super-settings-user-selected-settings [selectedUser]="selectedUser" />
+<user-super-settings-user-selected-settings
+  [selectedUser]="selectedUser"
+  (deleteUser)="refreshUsers()"
+/>
 <div
   class="bg-primary_200 col-span-3 row-span-2 flex flex-grow flex-col rounded-md border-black border-[1px]"
 >

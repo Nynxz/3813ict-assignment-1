@@ -30,6 +30,12 @@
       [value]="creating ? 'Create' : 'Update'"
     />
   </form>
+  <div
+    class="w-full rounded-md border-black border-[1px] mt-1 cursor-pointer hover:bg-black hover:bg-opacity-25 mb-2"
+    (click)="deleteGroup()"
+  >
+    Delete
+  </div>
   @if(error != ''){
   <div
     class="border-black border-[1px] text-red-600 bg-white rounded-md underline font-bold"

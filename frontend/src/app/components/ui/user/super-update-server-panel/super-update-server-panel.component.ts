@@ -33,9 +33,16 @@ export class SuperUpdateServerPanelComponent implements OnChanges {
         .http_postCreateGroup(this.group)
         ?.subscribe((e: any) => {
           console.log(e);
-          if (!e.error) window.location.reload();
+          if (!e.error) this.groupService.refreshGroups();
           else this.error = e.error;
         });
     }
+  }
+
+  deleteGroup() {
+    this.groupService.http_postDeleteGroup(this.group).subscribe((e) => {
+      this.groupService.refreshGroups();
+      console.log(e);
+    });
   }
 }

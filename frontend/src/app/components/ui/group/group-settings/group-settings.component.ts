@@ -95,6 +95,16 @@ export class GroupSettingsComponent {
   }
 
   promoteUserToGroupAdmin() {
+    //TODO this & auth deleting & makings groups
+    this.groupService
+      .http_postPromoteUserOfGroup(
+        this.configUser()?.username!,
+        this.chatService.selectedGroup()?._id!
+      )
+      .subscribe((e) => {
+        console.log(e);
+        this.chatService.selectGroup(this.chatService.selectedGroup()!);
+      });
     console.log(this.configUser());
   }
 }

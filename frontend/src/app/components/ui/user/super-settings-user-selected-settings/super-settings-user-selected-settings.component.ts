@@ -1,5 +1,12 @@
 import { NgIf } from '@angular/common';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { SuperUserService } from '@services/super-user/super-user.service';
 
 @Component({
@@ -18,10 +25,16 @@ export class SuperSettingsUserSelectedSettingsComponent implements OnChanges {
   selectedUser: any | undefined = undefined;
   roles: string = '';
 
+  @Output()
+  deleteUser = new EventEmitter<any>();
+
+  confirmDelete = false;
+
   constructor(private superuserService: SuperUserService) {}
 
   ngOnChanges(): void {
     this.roles = this.getRolesText();
+    this.confirmDelete = false;
   }
 
   getRolesText() {
@@ -50,5 +63,18 @@ export class SuperSettingsUserSelectedSettingsComponent implements OnChanges {
 
   saveUser() {
     this.superuserService.updateUser(this.selectedUser);
+  }
+
+  deleteSelectedUser() {
+    if (!this.confirmDelete) {
+      this.confirmDelete = true;
+    } else {
+      this.superuserService
+        .http_postDeleteUser(this.selectedUser)
+        .subscribe((e) => {
+          this.deleteUser.emit(e);
+          this.confirmDelete = false;
+        });
+    }
   }
 }

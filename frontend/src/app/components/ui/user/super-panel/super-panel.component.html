@@ -15,7 +15,7 @@
         Create Server
       </li>
       <li
-        *ngFor="let group of groups; first as isFirst"
+        *ngFor="let group of groups(); first as isFirst"
         class="border-black border-solid border-[1px] flex flex-grow flex-col"
       >
         <user-super-server-widget
@@ -30,7 +30,7 @@
         [group]="selectedGroup"
         [creating]="creating"
       />
-      Maybe Group User Panel (add remove)? idk
+      <!-- Maybe Group User Panel (add remove)? idk -->
     </div>
   </div>
 </div>

@@ -35,6 +35,7 @@ export class SuperSettingsComponent {
     this.userService.http_getAllUsers().subscribe((e) => {
       if (e) this.users = e as any[] | [];
     });
+    this.selectedUser = undefined;
   }
 
   selectUser(user: any) {

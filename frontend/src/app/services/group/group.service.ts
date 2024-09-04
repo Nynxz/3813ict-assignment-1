@@ -103,6 +103,7 @@ export class GroupService {
 
   // POST /channel/adduser
   http_postAddUserToChannel(channel: string, username: string) {
+    console.log(channel, username);
     return this.httpClient.post(
       environment.backend_base_URL + '/channel/adduser',
       JSON.stringify({
@@ -201,6 +202,20 @@ export class GroupService {
     );
   }
 
+  // POST /groups/delete
+  http_postDeleteGroup(group: Partial<Group>) {
+    return this.httpClient.post(
+      environment.backend_base_URL + '/groups/delete',
+      JSON.stringify({ group }),
+      {
+        headers: {
+          Authorization: 'Bearer ' + this.preferenceService.preferences().jwt,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  }
+
   // POST /groups/update
   http_postUpdateGroup(group: Partial<Group>) {
     return this.httpClient.post(
@@ -240,6 +255,22 @@ export class GroupService {
       JSON.stringify({
         group: { _id: groupID },
         user: { username },
+      }),
+      {
+        headers: {
+          Authorization: 'Bearer ' + this.preferenceService.preferences().jwt,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  }
+  // POST /groups/promoteuser
+  http_postPromoteUserOfGroup(username: string, groupID: string) {
+    return this.httpClient.post(
+      environment.backend_base_URL + '/groups/promoteuser',
+      JSON.stringify({
+        group: groupID,
+        user: username,
       }),
       {
         headers: {

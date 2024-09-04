@@ -36,4 +36,20 @@ export class SuperUserService {
       }
     );
   }
+
+  // POST /super/updateuser
+  http_postDeleteUser(user: Partial<User>) {
+    return this.httpClient.post(
+      environment.backend_base_URL + '/super/deleteuser',
+      JSON.stringify({
+        user: user,
+      }),
+      {
+        headers: {
+          Authorization: 'Bearer ' + this.preferenceService.preferences().jwt,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  }
 }
