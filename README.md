@@ -30,11 +30,11 @@
 > - Using [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
 
 ## Git
-Initial project was created in `main branch`. Became a mess as I learnt new things about Angular, decided to create `v2 branch` which is a recreation of the main branch. 
+Initial project was created in `main branch`. Became a mess as I learnt new things about Angular, decided to create `v2 branch` which is a recreation of the main branch. Once v2 caught up with v1, I merged the changes into main and deleted the v1 frontend directory.
+
 Both the Angular Frontend and the Express Backend are contained within a single repository
 - https://github.com/Nynxz/3813ict-assignment-1
 
-v1 was contained within `ngfrontend` while the new v2 frontend is contained within the `frontend` directory. The Express backend is contained within the `backend` directory.
 
 I will be using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)  and also try my best to conform to [Angulars Commit Message Guidelines (Types)](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#type).
 - **Types**
@@ -242,29 +242,62 @@ A request which contains above, must recieve a payload like below.
 ## Routes
 > #### Note
 > Many routes are currently POST instead of GET, due to requiring a JWT token. I am aware I can use headers to supply "an auth bearer token". I am in the process of converting middleware, routes and angular services to use headers instead of the request body. Currently `routes/test.ts`  `GET /jwttest` route has 
+```
+[gateway]: ----channels.ts----
+[gateway]: ++ (GET) /channel/messages
+[gateway]: ++ (GET) /channel/users
+[gateway]: ++ (POST) /channel/adduser
+[gateway]: ++ (POST) /channel/removeuser
+[gateway]: ++ (POST) /channel/create
+[gateway]: ++ (POST) /channel/delete
+[gateway]: ++ (POST) /channel/update
+[gateway]: ----group.ts----
+[gateway]: ++ (GET) /groups
+[gateway]: ++ (GET) /groups/channels
+[gateway]: ++ (GET) /groups/users
+[gateway]: ++ (POST) /groups/create
+[gateway]: ++ (POST) /groups/delete
+[gateway]: ++ (POST) /groups/update
+[gateway]: ++ (POST) /groups/adduser
+[gateway]: ++ (POST) /groups/removeuser
+[gateway]: ++ (POST) /groups/promoteuser
+[gateway]: ----messages.ts----
+[gateway]: ++ (POST) /message/send
+[gateway]: ----superuser.ts----
+[gateway]: ++ (POST) /super/updateuser
+[gateway]: ++ (POST) /super/deleteuser
+[gateway]: ----user.ts----
+[gateway]: ++ (GET) /users/all
+[gateway]: ++ (POST) /user/create
+[gateway]: ++ (POST) /user/login
+[gateway]: ++ (POST) /user/update
+ ```
 ### **Implemented**
 #### Users
+- `(GET) /users/all`
+  - `requireValidRole(Roles.SUPER)`
+  - Gets all users of the app
+  - Returns array of all users
+  - 
 - `(POST) /user/create`
   - `requireObjectHasKeys("user", ["username", "email", "password"])`
   - User Registration
   - Returns JWT
 - `(POST) /user/login`
-  - `requireObjectHasKeys("user", ["username", "password"])`
-  - User Login
-  - Returns JWT
-- `(POST) /users/all`
-  - `requireValidRole(Roles.SUPER)`
-  - Gets all users of the app
-  - Returns array of all users
-
+- `(POST) /user/update`
+- `(POST) /user/delete`
 
 #### Groups
-- `(POST) /groups`
+- `(GET) /groups`
   - `requireValidRole(Roles.USER)`
   - Gets Groups for specific user
   - If SUPER role, gets all groups of app
   - If not, gets all groups user is ADMIN / USER of
   - Returns array of Groups
+- `(GET) /groups/channels`
+- `(GET) /groups/users`
+  - Gets all the users of a specific group
+  - TODO: add validation (user of group, admin or super)
 - `(POST) /groups/create`
   - `requireValidRole(Roles.ADMIN)`
   - Creates a new group if user is an ADMIN
@@ -273,15 +306,22 @@ A request which contains above, must recieve a payload like below.
   - TODO: allow admins to update
   - TODO: validate request body
   - Updates a group
-- `(POST) /groups/users`
-  - Gets all the users of a specific group
-  - TODO: add validation (user of group, admin or super)
+- `(POST) /groups/adduser`
+- `(POST) /groups/removeuser`
+
+#### Messages
 - `(POST) /message/send`
   - `requireValidRole(Roles.USER)`,
   - `requireObjectHasKeys("message", ["content", "channel"])`
   - Sends a message to a channel
 
 #### Channels
+- `(GET) /channel/messages`
+  - Gets all messages of a specific channel
+- `(GET) /channel/users`
+  - Gets all users of a specific channel
+- `(POST) /channel/adduser`
+- `(POST) /channel/removeuser`
 - `(POST) /channel/create`
   - `requireValidRole(Roles.ADMIN)`
   - Creates a new channel
@@ -291,10 +331,7 @@ A request which contains above, must recieve a payload like below.
 - `(POST) /channel/update`
   - `requireValidRole(Roles.ADMIN)`
   - Updates an existing channel
-- `(POST) /channel/messages`
-  - Gets all messages of a specific channel
-- `(POST) /channels`
-  - Gets all the channels of a specific group
+
   
 #### Admin
 - `(POST) /super/updateuser`
