@@ -16,7 +16,7 @@
     @for (server of servers(); track $index) {
     <sidebar-server-widget
       class="select-none"
-      (clickEvent)="selectGroup(server)"
+      (click)="selectGroup(server)"
       [folded]="folded()"
       [server]="server"
       [selected]="selectedGroup() == server"

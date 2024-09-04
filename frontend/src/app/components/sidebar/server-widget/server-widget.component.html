@@ -15,7 +15,11 @@
     </span>
     <img
       class="rounded-md w-8 h-8 select-none"
-      src="{{ server?.imageURL }}"
+      src="{{
+        server?.imageURL
+          ? server?.imageURL
+          : 'https://cdn-icons-png.freepik.com/512/10017/10017806.png'
+      }}"
       draggable="false"
     />
     <p *ngIf="folded" class="leading-4 w-full">{{ server?.name }}</p>
