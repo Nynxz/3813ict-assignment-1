@@ -140,6 +140,7 @@ Represents a message sent in a channel, from a user.
     - Communicates with the backend to verify credentials and save JWT
   - **Group Service**
     - Used for creating/updating groups & channels
+
   - **Chat Service**
     - Used for managing the chat
     - Sending/deleting messages
@@ -159,9 +160,12 @@ Represents a message sent in a channel, from a user.
 ### Guards
   - IsLoggedIn
     - Blocks routing unless the user is logged in
-    - Redirects to `/login`
-    - Used On `/user` and `/chat`
-
+    - Redirects to `/`
+    - Used On `/chat`
+  - isloggedinGuardRedirectTo
+    - Same as IsLoggedIn but allows customisable redirects
+    - Used on `/user` to redirect to `/login`
+ 
 ## Express
 I have created a simple 'framework' for managing my backend routes which uses express. 
 ### Concept
@@ -330,4 +334,25 @@ JWT's are used for authorization of backend routes. When the user logs in, the b
 - Signals allow for components to 'subscribe' to state changes and react
 - This allows for a single source of truth components can use
 - Services inject and use the [HttpClient](https://angular.dev/api/common/http/HttpClient) class to send requests to the backend.
-- 
+- Components then inject these services where needed either to fetch the current state or allow updates to state through things like button presses or route changes.
+
+#### Backend <> Database
+- MongoDB is used to store the applications data
+- The backend uses MongooseJS to interact with MongoDB
+```js
+// With Mongoose
+let ChannelSchema = new Schema({...});
+export const ChannelModel = mongoose.model("Channel", ChannelSchema);
+
+export async function createChannel(channel: object) {
+  return await new ChannelModel(channel).save();
+}
+
+// Without Mongoose
+export async function createChannel(mongoClient: MongoClient, channel: object) {
+  return await mongoClient.db("3813ICT")
+    .collection("channels")
+    .insertOne(channel);
+}
+
+```
