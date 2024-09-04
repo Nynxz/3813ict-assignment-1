@@ -7,6 +7,7 @@ import { ChatService } from '@services/chat/chat.service';
 import { environment } from '@environments/environment';
 import { Group } from '@/group.type';
 import { Channel } from '@/channel.type';
+import { UserService } from '@services/user/user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,121 +16,61 @@ export class GroupService {
   groups = signal([] as Group[]);
 
   constructor(
-    private router: Router,
     private httpClient: HttpClient,
     private preferences: PreferencesService,
     private chatService: ChatService
   ) {}
 
-  updateServers() {
-    this.getGroups().subscribe((e) => {
-      console.log(e);
-      this.groups.set(e);
-    });
+  refreshGroups() {
+    this.preferences.getItem('jwt') != ''
+      ? this.http_getGroups().subscribe((e) => {
+          this.groups.set(e);
+        })
+      : this.groups.set([]);
   }
 
-  getGroups() {
-    return this.httpClient.post(
-      environment.backend_base_URL + '/groups',
-      JSON.stringify({ jwt: this.preferences.getItem('jwt') }),
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    ) as Observable<Group[]>;
-  }
-
-  updateServer(group: any) {
+  updateGroup(group: any) {
     try {
-      console.log('Trying ping?');
       // return this.httpClient.get('http://localhost:3010/ping');
-      const jwt = this.preferences.getItem('jwt');
-      return this.httpClient
-        .post(
-          environment.backend_base_URL + '/groups/update',
-          JSON.stringify({ group, jwt }),
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        )
-        .pipe(
-          catchError((error: HttpErrorResponse) => {
+      return this.http_postUpdateGroup(group).pipe(
+        catchError((error: HttpErrorResponse) => {
+          // window.location.reload();
+          // this.router.navigateByUrl('/login');
+          this.preferences.setItem('jwt', '');
+          return throwError(() => {
             // window.location.reload();
-            this.router.navigateByUrl('/login');
-            this.preferences.setItem('jwt', '');
-            return throwError(() => {
-              window.location.reload();
-              return new Error(
-                'Something bad happened; please try again later.'
-              );
-            });
-          })
-        );
-    } catch (error) {}
-    return;
-  }
-
-  createGroup(group: { name: string }) {
-    try {
-      const jwt = this.preferences.getItem('jwt');
-      return this.httpClient.post(
-        environment.backend_base_URL + '/groups/create',
-        JSON.stringify({ group, jwt }),
-        { headers: { 'Content-Type': 'application/json' } }
+            return new Error('Something bad happened; please try again later.');
+          });
+        })
       );
     } catch (error) {}
     return;
   }
 
-  createChannel(channel: { name: string; group: string }) {
+  createChannel(channel: Partial<Channel>) {
     try {
-      const jwt = this.preferences.getItem('jwt');
-      return this.httpClient
-        .post(
-          environment.backend_base_URL + '/channel/create',
-          JSON.stringify({ channel, jwt }),
-          { headers: { 'Content-Type': 'application/json' } }
-        )
-        .subscribe((e) => {
-          console.log('COMPLETED');
-          console.log(e);
-          this.chatService.selectGroup(this.chatService.selectedGroup()!);
-        });
+      return this.http_postCreateChannel(channel).subscribe((e) => {
+        this.chatService.selectGroup(this.chatService.selectedGroup()!);
+      });
     } catch (error) {}
     return;
   }
 
   deleteSelectedChannel() {
     try {
-      const jwt = this.preferences.getItem('jwt');
-      return this.httpClient
-        .post(
-          environment.backend_base_URL + '/channel/delete',
-          JSON.stringify({ channel: this.chatService.selectedChannel(), jwt }),
-          { headers: { 'Content-Type': 'application/json' } }
-        )
-        .subscribe((e) => {
-          console.log('COMPLETED');
-          console.log(e);
-          this.chatService.selectGroup(this.chatService.selectedGroup()!);
-        });
+      this.http_postDeleteChannel(
+        this.chatService.selectedChannel()!
+      ).subscribe((e) => {
+        this.chatService.selectGroup(this.chatService.selectedGroup()!);
+      });
     } catch (error) {}
     return;
   }
 
-  updateChannel(channel: Channel) {
+  updateChannel(channel: Partial<Channel>) {
     console.log(channel);
     try {
-      const jwt = this.preferences.getItem('jwt');
-      return this.httpClient
-        .post(
-          environment.backend_base_URL + '/channel/update',
-          JSON.stringify({ channel: channel, jwt }),
-          { headers: { 'Content-Type': 'application/json' } }
-        )
+      this.http_postUpdateChannel(channel)
         .pipe(
           catchError((res: HttpErrorResponse) => {
             // window.location.reload();
@@ -139,11 +80,126 @@ export class GroupService {
           })
         )
         .subscribe((e) => {
-          console.log('COMPLETED');
-          console.log(e);
           this.chatService.selectGroup(this.chatService.selectedGroup()!);
         });
     } catch (error) {}
     return;
+  }
+
+  addUserToGroup(userName: string, groupID: string) {
+    try {
+      this.http_postAddUserToGroup(userName, groupID)
+        .pipe(
+          catchError((res: HttpErrorResponse) => {
+            // window.location.reload();
+            return throwError(() => {
+              return new Error(res.error.error);
+            });
+          })
+        )
+        .subscribe((e) => {
+          this.chatService.selectGroup(this.chatService.selectedGroup()!);
+        });
+    } catch (error) {}
+    return;
+  }
+
+  /* HTTP */
+
+  // POST /channel/create
+  http_postCreateChannel(channel: Partial<Channel>) {
+    return this.httpClient.post(
+      environment.backend_base_URL + '/channel/create',
+      JSON.stringify({ channel }),
+      {
+        headers: {
+          Authorization: 'Bearer ' + this.preferences.getItem('jwt'),
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  }
+
+  // POST /channel/delete
+  http_postDeleteChannel(channel: Partial<Channel>) {
+    return this.httpClient.post(
+      environment.backend_base_URL + '/channel/delete',
+      JSON.stringify({ channel }),
+      {
+        headers: {
+          Authorization: 'Bearer ' + this.preferences.getItem('jwt'),
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  }
+
+  // POST /channel/update
+  http_postUpdateChannel(channel: Partial<Channel>) {
+    return this.httpClient.post(
+      environment.backend_base_URL + '/channel/update',
+      JSON.stringify({ channel: channel }),
+      {
+        headers: {
+          Authorization: 'Bearer ' + this.preferences.getItem('jwt'),
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  }
+
+  // GET /groups
+  http_getGroups() {
+    return this.httpClient.get(environment.backend_base_URL + '/groups', {
+      headers: {
+        Authorization: 'Bearer ' + this.preferences.getItem('jwt'),
+        'Content-Type': 'application/json',
+      },
+    }) as Observable<Group[]>;
+  }
+
+  // POST /groups/create
+  http_postCreateGroup(group: Partial<Group>) {
+    return this.httpClient.post(
+      environment.backend_base_URL + '/groups/create',
+      JSON.stringify({ group }),
+      {
+        headers: {
+          Authorization: 'Bearer ' + this.preferences.getItem('jwt'),
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  }
+
+  // POST /groups/update
+  http_postUpdateGroup(group: Partial<Group>) {
+    return this.httpClient.post(
+      environment.backend_base_URL + '/groups/update',
+      JSON.stringify({ group }),
+      {
+        headers: {
+          Authorization: 'Bearer ' + this.preferences.getItem('jwt'),
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  }
+
+  // POST /groups/adduser
+  http_postAddUserToGroup(username: string, groupID: string) {
+    return this.httpClient.post(
+      environment.backend_base_URL + '/groups/adduser',
+      JSON.stringify({
+        group: { _id: groupID },
+        user: { username },
+      }),
+      {
+        headers: {
+          Authorization: 'Bearer ' + this.preferences.getItem('jwt'),
+          'Content-Type': 'application/json',
+        },
+      }
+    );
   }
 }
