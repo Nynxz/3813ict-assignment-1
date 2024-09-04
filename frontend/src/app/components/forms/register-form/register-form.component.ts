@@ -20,10 +20,9 @@ export class RegisterFormComponent {
 
   constructor(private userService: UserService) {}
 
-  handleSubmit() {
+  handleLoginSubmit() {
     if (this.email == '' || this.password == '') {
       this.Error.set('Empty Input');
-      return;
     } else {
       this.userService.login(this.email, this.password).then((e: any) => {
         if (e.error) {
@@ -32,10 +31,10 @@ export class RegisterFormComponent {
       });
     }
   }
-  handleRegister() {
+
+  handleRegisterSubmit() {
     if (this.email == '' || this.password == '' || this.username == '') {
       this.Error.set('Empty Input');
-      return;
     } else {
       this.userService
         .register(this.email, this.password, this.username)
