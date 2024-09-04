@@ -1,8 +1,9 @@
-import { User, UserModel } from "./types/user";
+import { Roles, User, UserModel } from "./types/user";
 
 export async function db_user_create(user: Partial<User>) {
   const exists = await UserModel.exists({ username: user.username });
   if (!exists) {
+    user.roles = [Roles.USER];
     let nn = new UserModel(user);
     let newUser = await nn.save();
     // let n = await MongoClient.db("3813ICT").collection("users").insertOne(user);
@@ -25,4 +26,9 @@ export async function db_users_all() {
 
 export async function db_user_update(user: Partial<User>) {
   return await UserModel.updateOne({ _id: user._id }, user);
+}
+
+export async function db_user_delete(user: Partial<User>) {
+  console.log(user._id);
+  return await UserModel.deleteOne({ _id: user._id });
 }

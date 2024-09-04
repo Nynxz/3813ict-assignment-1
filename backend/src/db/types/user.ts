@@ -5,7 +5,7 @@ let UserSchema = new Schema({
   username: String,
   email: String,
   password: String,
-  roles: Array<Roles>,
+  roles: [{ type: Number }],
   groups: [
     {
       type: Schema.Types.ObjectId,

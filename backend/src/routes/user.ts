@@ -54,7 +54,5 @@ export default (router: Router, gateway: Gateway) => {
   );
 
   registerHTTP("post", "/user/update", router, (req, res) => {});
-  registerHTTP("post", "/user/delete", router, (req, res) => {}, [
-    requireValidRole(Roles.SUPER),
-  ]);
+
 };

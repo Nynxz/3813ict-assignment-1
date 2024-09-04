@@ -45,10 +45,10 @@ export default (router: Router, gateway: Gateway) => {
     "/channel/adduser",
     router,
     async (req, res) => {
-      console.log(res.locals.user.id, req.body.channel);
+      console.log(res.locals.user._id, req.body.channel);
       if (
         (await check_userIsAdminOfChannel(
-          res.locals.user.id,
+          res.locals.user._id,
           req.body.channel
         )) ||
         res.locals.user.roles.includes(Roles.SUPER)
@@ -123,7 +123,17 @@ export default (router: Router, gateway: Gateway) => {
     router,
     async (req, res) => {
       //get the groups of the user who requested
-      res.send(await db_channel_update(req.body.channel));
+      if (
+        (await check_userIsAdminOfChannel(
+          res.locals.user._id,
+          req.body.channel
+        )) ||
+        res.locals.user.roles.includes(Roles.SUPER)
+      ) {
+        res.send(await db_channel_update(req.body.channel));
+      } else {
+        res.status(401).send({ error: "Insufficent Permissions!" });
+      }
     },
     [requireValidRole(Roles.ADMIN)]
   );
