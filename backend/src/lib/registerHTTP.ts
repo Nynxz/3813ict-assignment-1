@@ -14,6 +14,7 @@ type RouterMethod = "get" | "set" | "delete" | "head" | "post";
  * @param endpoint the endpoint eg `/` or `/api/hello`
  * @param router the express {@link Router} to bind the route to
  * @param callback the callback to execute when the route is hit
+ * @param middlewares collection of middleware to run before the callback
  * ---
  * ## **EXAMPLE**
  * Creating a .ts file in `src/routes/` with a default
@@ -32,10 +33,10 @@ export function registerHTTP(
   endpoint: string,
   router: Router,
   callback: (req: Request, res: Response) => void,
-  middlewares?: Array<Middleware>
+  middlewares?: Middleware[]
 ) {
   /*Below runs when Route is Registered by Gateway on Server Start */
-  Logger.logGreenUnderline(`++ (${method.toUpperCase()}) ${endpoint}`);
+  Logger.logGreen(`++ (${method.toUpperCase()}) ${endpoint}`);
 
   // same as router.get(), etc, just called dynamically and saves using switch/if else
   (router as any)[method](endpoint, (req: Request, res: Response) => {

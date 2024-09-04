@@ -1,6 +1,7 @@
-import { sign } from "jsonwebtoken";
 import { config } from "dotenv";
-import { User } from "../db/user";
+import { sign } from "jsonwebtoken";
+import { User } from "../db/types/user";
+
 config();
 
 export const generateUserJWT = (user: Partial<User>) => {
