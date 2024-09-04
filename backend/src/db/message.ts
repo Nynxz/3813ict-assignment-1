@@ -1,33 +1,15 @@
-import mongoose, { Schema } from "mongoose";
+import { MessageModel } from "./types/message";
 
-let MessageSchema = new Schema({
-  from: String,
-  content: String,
-  channel: {
-    type: Schema.Types.ObjectId,
-    ref: "Channel",
-  },
-  sender: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-  },
-});
-
-export const MessageModel = mongoose.model("Message", MessageSchema);
-
-export const sendMessage = async (
+// POST /message/send
+export async function db_message_send(
   message: string,
   channel: string,
   from: string
-) => {
+) {
   let newMessage = new MessageModel({
     content: message,
     channel: channel,
     sender: from,
   });
   return await newMessage.save();
-};
-
-export async function getMessagesForChannel(channel: string) {
-  return await MessageModel.find({ channel }).exec();
 }
