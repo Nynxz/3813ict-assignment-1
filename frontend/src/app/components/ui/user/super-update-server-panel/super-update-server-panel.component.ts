@@ -16,25 +16,26 @@ export class SuperUpdateServerPanelComponent implements OnChanges {
   };
   @Input() creating: boolean = false;
   error = '';
+
   constructor(private groupService: GroupService) {}
-  ngOnChanges(changes: SimpleChanges): void {
+
+  ngOnChanges() {
     this.error = '';
   }
   handleSubmit() {
-    console.log('Submitting??');
-    //TODO: this is jank afk, stop using names of things to check for state...
     if (!this.creating) {
-      this.groupService.updateServer(this.group)?.subscribe((e: any) => {
+      this.groupService.updateGroup(this.group)?.subscribe((e: any) => {
+        this.groupService.refreshGroups();
         console.log(e);
-        if (!e.error) window.location.reload();
-        else this.error = e.error;
       });
     } else {
-      this.groupService.createGroup(this.group)?.subscribe((e: any) => {
-        console.log(e);
-        if (!e.error) window.location.reload();
-        else this.error = e.error;
-      });
+      this.groupService
+        .http_postCreateGroup(this.group)
+        ?.subscribe((e: any) => {
+          console.log(e);
+          if (!e.error) window.location.reload();
+          else this.error = e.error;
+        });
     }
   }
 }

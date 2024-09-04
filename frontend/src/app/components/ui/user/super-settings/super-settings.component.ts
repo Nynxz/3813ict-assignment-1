@@ -1,11 +1,5 @@
 import { CommonModule, NgClass, NgIf } from '@angular/common';
-import {
-  Component,
-  computed,
-  OnInit,
-  signal,
-  WritableSignal,
-} from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { UserService } from '@services/user/user.service';
 import { SuperSettingsUserSelectorComponent } from '../super-settings-user-selector/super-settings-user-selector.component';
 import { SuperSettingsUserSelectedSettingsComponent } from '../super-settings-user-selected-settings/super-settings-user-selected-settings.component';
@@ -38,13 +32,12 @@ export class SuperSettingsComponent {
   }
 
   refreshUsers() {
-    this.userService.getAllUsers().subscribe((e) => {
+    this.userService.http_getAllUsers().subscribe((e) => {
       if (e) this.users = e as any[] | [];
     });
   }
 
   selectUser(user: any) {
-    // this.refreshUsers();
     this.selectedUser = user;
   }
 

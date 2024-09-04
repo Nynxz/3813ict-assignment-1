@@ -23,7 +23,7 @@ export class SuperPanelComponent {
   constructor(private groupService: GroupService) {}
 
   ngOnInit(): void {
-    this.groupService.getGroups().subscribe((e) => (this.groups = e));
+    this.groupService.http_getGroups().subscribe((e) => (this.groups = e));
   }
 
   newGroup() {

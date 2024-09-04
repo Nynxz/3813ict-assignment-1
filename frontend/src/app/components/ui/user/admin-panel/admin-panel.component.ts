@@ -8,3 +8,4 @@ import { Component } from '@angular/core';
   styleUrl: './admin-panel.component.css',
 })
 export class AdminPanelComponent {}
+//TODO: Remove/rename user super panel

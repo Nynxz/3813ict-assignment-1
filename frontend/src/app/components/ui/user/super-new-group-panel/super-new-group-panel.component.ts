@@ -5,8 +5,7 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './super-new-group-panel.component.html',
-  styleUrl: './super-new-group-panel.component.css'
+  styleUrl: './super-new-group-panel.component.css',
 })
-export class SuperNewGroupPanelComponent {
-
-}
+export class SuperNewGroupPanelComponent {}
+//TODO: remove?
