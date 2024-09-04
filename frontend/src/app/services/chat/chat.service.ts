@@ -25,96 +25,95 @@ export class ChatService {
   selectGroup(group: Group) {
     this.selectedChannel.set(undefined);
     this.selectedGroup.set(group);
-    this._getGroupChannels();
+    this.refreshSelectedGroupChannels();
     this.updateGroupUsers();
   }
 
   selectChannel(channel: Channel | undefined) {
-    console.log(channel);
     this.selectedChannel.set(channel);
-    this._getChannelMessages();
+    this.refreshSelectedChannelMessages();
   }
 
   sendMessage(message: string) {
-    return this.httpClient
-      .post(
-        environment.backend_base_URL + '/message/send',
-        JSON.stringify({
-          message: {
-            content: message,
-            channel: this.selectedChannel(),
-          },
-          jwt: this.preferencesService.getItem('jwt'),
-        }),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      )
-      .subscribe((e) => {
-        this._getChannelMessages();
-      });
-  }
-  private _getGroupChannels() {
-    return this.httpClient
-      .post(
-        environment.backend_base_URL + '/channels',
-        JSON.stringify({
-          group: this.selectedGroup()!._id,
-        }),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      )
-      .subscribe((e) => {
-        console.log(e);
-        this.channels.set(e as Channel[]);
-      });
+    return this.http_postMessageSend(message).subscribe((e) => {
+      this.refreshSelectedChannelMessages();
+    });
   }
 
-  private _getChannelMessages() {
-    return this.httpClient
-      .post(
-        environment.backend_base_URL + '/channel/messages',
-        JSON.stringify({
-          channel: this.selectedChannel(),
-        }),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      )
-      .subscribe((e) => {
-        console.log(e);
-        this.messages.set(e);
-      });
+  private refreshSelectedGroupChannels() {
+    return this.http_getGroupChannels().subscribe((e) => {
+      this.channels.set(e as Channel[]);
+    });
   }
 
   updateGroupUsers() {
-    this._getGroupUsers();
+    this.http_getGroupUsers().subscribe((e) => {
+      this.selectedGroupUsers.set(e as User[]);
+    });
   }
 
-  private _getGroupUsers() {
-    return this.httpClient
-      .post(
-        environment.backend_base_URL + '/groups/users',
-        JSON.stringify({
-          group: this.selectedGroup()?._id,
-        }),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      )
-      .subscribe((e) => {
-        console.log(e);
-        console.log(this.selectedGroup()?._id);
-        this.selectedGroupUsers.set(e as User[]);
-      });
+  private refreshSelectedChannelMessages() {
+    if (!this.selectedChannel()) return;
+    this.http_getChannelMessages().subscribe((e) => {
+      this.messages.set(e);
+    });
+  }
+
+  /* HTTP */
+
+  // POST /message/send
+  http_postMessageSend(message: string) {
+    return this.httpClient.post(
+      environment.backend_base_URL + '/message/send',
+      JSON.stringify({
+        message: {
+          content: message,
+          channel: this.selectedChannel(),
+        },
+      }),
+      {
+        headers: {
+          Authorization: 'Bearer ' + this.preferencesService.getItem('jwt'),
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  }
+
+  // GET /groups/channels
+  http_getGroupChannels() {
+    return this.httpClient.get(
+      environment.backend_base_URL + '/groups/channels',
+      {
+        headers: {
+          group: this.selectedGroup()!._id as string,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  }
+
+  // GET /groups/users
+  http_getGroupUsers() {
+    return this.httpClient.get(environment.backend_base_URL + '/groups/users', {
+      headers: {
+        group: this.selectedGroup()?._id as string,
+        'Content-Type': 'application/json',
+      },
+    });
+  }
+
+  // GET /channel/messages
+  http_getChannelMessages() {
+    return this.httpClient.get(
+      environment.backend_base_URL + '/channel/messages',
+      {
+        headers: {
+          channel: this.selectedChannel()?._id || '',
+          Authorization: 'Bearer ' + this.preferencesService.getItem('jwt'),
+          'Content-Type': 'application/json',
+        },
+      }
+    );
   }
 }
