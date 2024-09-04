@@ -230,8 +230,10 @@ requireObjectHasKeys("message", ["content", "channel"]),
   ```
 A request which contains above, must recieve a payload like below.
 ```json
-{
-  "jwt": "<JWT which contains the role USER>",
+headers: {
+  "Authorization": "Bearer <JWT which contains the role USER>",
+},
+body: {
   "message": {
     "content": "",
     "channel": ""
